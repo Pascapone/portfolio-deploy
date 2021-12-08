@@ -37,7 +37,7 @@ const Astar = () => {
     const handlePopulateGridClick = async (numObstacles, stickPercentage) => {
         setGlobalStatus({ 'status' : StatusTypes.Loading, 'statusText' : 'Populating Grid' }) 
         
-        const response = await fetch('http://localhost:5000/api-populate-grid', {
+        const response = await fetch('/api-populate-grid', {
             method : 'POST',
             body : JSON.stringify({numObstacles, stickPercentage, rows, cols})
         })
