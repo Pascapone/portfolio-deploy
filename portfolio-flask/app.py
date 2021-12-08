@@ -28,7 +28,7 @@ CORS(app)
 if MODE == "development":
     app = Flask(__name__, static_folder=None)
 
-@app.route('/api-classify-mnist', methods=['POST'])
+@app.route('/api/classify-mnist', methods=['POST'])
 def classify_mnist():    
     if (request.data): 
         image = request.data
@@ -36,7 +36,7 @@ def classify_mnist():
         print('Model classification: ' + result)        
         return result
 
-@app.route('/api-classify-image', methods=['POST'])
+@app.route('/api/classify-image', methods=['POST'])
 def classify():    
     if (request.data): 
         url = request.data
@@ -44,7 +44,7 @@ def classify():
         print('Model classification: ' + result)        
         return result
 
-@app.route('/api-astar-find-path', methods=['POST'])
+@app.route('/api/astar-find-path', methods=['POST'])
 def astar_pathfinding():    
     if (request.data): 
         grid = json.loads(request.data)
@@ -71,7 +71,7 @@ def astar_pathfinding():
 
         return { "status" : "success", "path" : return_path, "gridHistory" : grid_history_object }
 
-@app.route('/api-populate-grid', methods=['POST'])
+@app.route('/api/populate-grid', methods=['POST'])
 def populate_grid():    
     if (request.data):     
         data = json.loads(request.data)
@@ -79,14 +79,14 @@ def populate_grid():
         grid = [[{'row' : node.row, 'col' : node.col, 'nodeType' : node.node_type} for node in row] for row in grid]
         return {'grid' : grid}
 
-@app.route('/api-generate-clusters', methods=['POST'])
+@app.route('/api/generate-clusters', methods=['POST'])
 def generate_clusters():
     if (request.data):
         data = json.loads(request.data)
         points = create_clusters(**data)
         return json.dumps([{"x": point[0], "y" : point[1] } for point in points])
 
-@app.route('/api-knearest', methods=['POST'])
+@app.route('/api/knearest', methods=['POST'])
 def apply_knearest():
     if (request.data):
         data = json.loads(request.data)

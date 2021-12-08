@@ -41,7 +41,7 @@ const ImageClassifier = () => {
         setGlobalStatus({ 'status' : StatusTypes.Loading, 'statusText' : 'Predicting...' })
         if (imageURL) {  
             setResult('Predicting...');    
-            const response = await fetch('/api/api-classify-image', {
+            const response = await fetch('/api/classify-image', {
                 method: "POST",
                 body: imageURL,
             });

@@ -46,7 +46,7 @@ const KNearest = () => {
     }
 
     const handlePopulateGraphClick = async () => {
-        const respone = await fetch('/api/api-generate-clusters', {
+        const respone = await fetch('/api/generate-clusters', {
             method : 'POST', 
             body : JSON.stringify({"centers" : nClusters, "n_samples" : nSamples, 'cluster_std' : std})
         })
@@ -75,7 +75,7 @@ const KNearest = () => {
             return
         }
 
-        const response = await fetch('/api/api-knearest', { 
+        const response = await fetch('/api/knearest', { 
             method : 'POST',
             body : JSON.stringify({points, nClusters})
         })

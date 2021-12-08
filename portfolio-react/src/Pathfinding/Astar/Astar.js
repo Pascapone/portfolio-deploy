@@ -37,7 +37,7 @@ const Astar = () => {
     const handlePopulateGridClick = async (numObstacles, stickPercentage) => {
         setGlobalStatus({ 'status' : StatusTypes.Loading, 'statusText' : 'Populating Grid' }) 
         
-        const response = await fetch('/api-populate-grid', {
+        const response = await fetch('/api/populate-grid', {
             method : 'POST',
             body : JSON.stringify({numObstacles, stickPercentage, rows, cols})
         })
@@ -74,7 +74,7 @@ const Astar = () => {
             setPathfindingGrid(grid)
 
             setResult("Pathfining...") 
-            const response = await fetch('/api/api-astar-find-path', {
+            const response = await fetch('/api/astar-find-path', {
                 method: "POST",
                 body: JSON.stringify(grid),
             });

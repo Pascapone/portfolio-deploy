@@ -23,7 +23,7 @@ const MNISTClassifier = () => {
         const image = canvasRef.current.getSaveData();        
         if (JSON.parse(image).lines.length > 0) {  
             setResult('Predicting...');    
-            const response = await fetch('/api/api-classify-mnist', {
+            const response = await fetch('/api/classify-mnist', {
                 method: "POST",
                 body: image,
             });
