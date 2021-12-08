@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "./static/css/main.d3ac351d.chunk.css",
+    "main.js": "./static/js/main.85a18f85.chunk.js",
+    "main.js.map": "./static/js/main.85a18f85.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.76f045dd.js",
+    "runtime-main.js.map": "./static/js/runtime-main.76f045dd.js.map",
+    "static/css/2.ec5bb609.chunk.css": "./static/css/2.ec5bb609.chunk.css",
+    "static/js/2.0427f1a2.chunk.js": "./static/js/2.0427f1a2.chunk.js",
+    "static/js/2.0427f1a2.chunk.js.map": "./static/js/2.0427f1a2.chunk.js.map",
+    "static/js/3.0763341d.chunk.js": "./static/js/3.0763341d.chunk.js",
+    "static/js/3.0763341d.chunk.js.map": "./static/js/3.0763341d.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/2.ec5bb609.chunk.css.map": "./static/css/2.ec5bb609.chunk.css.map",
+    "static/css/main.d3ac351d.chunk.css.map": "./static/css/main.d3ac351d.chunk.css.map",
+    "static/js/2.0427f1a2.chunk.js.LICENSE.txt": "./static/js/2.0427f1a2.chunk.js.LICENSE.txt",
+    "static/media/Braced To Free Hang.42600c18.fbx": "./static/media/Braced To Free Hang.42600c18.fbx",
+    "static/media/Falling Idle.f10e84c5.fbx": "./static/media/Falling Idle.f10e84c5.fbx",
+    "static/media/Freehang Drop.cc1b3c8b.fbx": "./static/media/Freehang Drop.cc1b3c8b.fbx",
+    "static/media/Hanging Idle.0b1e6d2e.fbx": "./static/media/Hanging Idle.0b1e6d2e.fbx",
+    "static/media/Hard Landing.921bde32.fbx": "./static/media/Hard Landing.921bde32.fbx",
+    "static/media/Idle.a5a8a64c.fbx": "./static/media/Idle.a5a8a64c.fbx",
+    "static/media/Jump To Freehang.20eb9b39.fbx": "./static/media/Jump To Freehang.20eb9b39.fbx",
+    "static/media/Kyle.f01d25c9.fbx": "./static/media/Kyle.f01d25c9.fbx",
+    "static/media/Left Turn.ae476b1a.fbx": "./static/media/Left Turn.ae476b1a.fbx",
+    "static/media/Pull Heavy Object.de072c21.fbx": "./static/media/Pull Heavy Object.de072c21.fbx",
+    "static/media/Right Turn.a0035427.fbx": "./static/media/Right Turn.a0035427.fbx",
+    "static/media/index.css": "./static/media/Roboto-Thin.1711b41f.ttf",
+    "static/media/Running.361c36a5.fbx": "./static/media/Running.361c36a5.fbx",
+    "static/media/Texting While Standing.95999f0a.fbx": "./static/media/Texting While Standing.95999f0a.fbx",
+    "static/media/Walk Strafe Left.0558dfac.fbx": "./static/media/Walk Strafe Left.0558dfac.fbx",
+    "static/media/Walk Strafe Right.6b3e5ee8.fbx": "./static/media/Walk Strafe Right.6b3e5ee8.fbx",
+    "static/media/semantic.min.css": "./static/media/outline-icons.ddae9b1b.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.76f045dd.js",
+    "static/css/2.ec5bb609.chunk.css",
+    "static/js/2.0427f1a2.chunk.js",
+    "static/css/main.d3ac351d.chunk.css",
+    "static/js/main.85a18f85.chunk.js"
+  ]
+}
