@@ -125,6 +125,6 @@ def apply_knearest():
         return json.dumps(return_object)
 
 
-# if __name__ == "main":
-#     app.run(debug=False, host='0.0.0.0')
+if __name__ == "main":
+	app.run(debug=False, host='0.0.0.0')
         
