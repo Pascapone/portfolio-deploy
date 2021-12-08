@@ -88,7 +88,7 @@ def prerocessing_image(image):
     rows,cols = image.shape
     M = np.float32([[1,0,shiftx],[0,1,shifty]])
     image = cv2.warpAffine(image,M,(cols,rows))  
-    np.save(r'C:\Users\pasca\Documents\MonkeyMoon\BaseTemplates\portfolio-project\backend\image.npy', image)
+   
     return image
 
 
