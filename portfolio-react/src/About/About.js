@@ -83,6 +83,7 @@ const About = () => {
         <div>            
             <h1>About</h1> 
             <Segment style={{width : 600, margin : 'auto', textAlign : 'justify', padding :40}}>
+                <h3>Pascal Schott</h3>
                 <span style={{}}>
                     I'm a mechanical engineer and a self taught programmer.
                     During university i fell in love with programming and tried to pick
