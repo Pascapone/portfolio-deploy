@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Typing from 'react-typing-animation';
-import gsap from 'gsap';
 import { Context3D } from '../Context';
 import { Button } from "semantic-ui-react";
 
