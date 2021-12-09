@@ -6,7 +6,9 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import colonnaMT from '../Fonts/Colonna MT_Regular.json';
-import robotFont from '../Fonts/Roboto Black_Italic.json'
+import robotFont from '../Fonts/Roboto Black_Italic.json';
+import readexFont from '../Fonts/Readex Pro_Bold.json';
+
 
 import { AnimationLoader, FBXModel, RotateToTween, TranslateToTween, customEventTracker } from './AnimationSystem';
 import { FBXAnimationNames, kyleAnimationLoaders, createIntroSequence, kyleAnimations } from './Animations';
@@ -249,7 +251,7 @@ const Render3D = (props) => {
 
          
     // Pascal Text
-    const font = new FontLoader().parse(robotFont);
+    const font = new FontLoader().parse(readexFont);
 
     const textConfig = {
       font: font,
@@ -257,9 +259,9 @@ const Render3D = (props) => {
       height: 0.0001,      
     }
 
-    pascalSchottText = new THREE.Object3D();
-    // '#cee6eb'
+    pascalSchottText = new THREE.Object3D(); 
     const textColor = '#4e8dc2'
+
     var geometry = new TextGeometry( 'Pascal',  textConfig);  
     var material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
     var pascalText =  new THREE.Mesh( geometry, material );
@@ -267,8 +269,7 @@ const Render3D = (props) => {
     pascalText.position.x = -2
     pascalText.position.y = 0.8
 
-    var geometry = new TextGeometry( 'Schott',  textConfig);
-  
+    var geometry = new TextGeometry( 'Schott',  textConfig);  
     var material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
     var schottText =  new THREE.Mesh( geometry, material );
     pascalSchottText.add( schottText );
@@ -276,9 +277,9 @@ const Render3D = (props) => {
     schottText.position.y = 0
 
     scene.add(pascalSchottText);    
-    pascalSchottText.position.z = 2;
+    pascalSchottText.position.z = 2.2;
 
-    pascalSchottText.position.x = -hScreenEdgeByZPosition(pascalSchottText.position.z) + -0.5;
+    pascalSchottText.position.x = -hScreenEdgeByZPosition(pascalSchottText.position.z) + -1;
     
 
     // Plane
