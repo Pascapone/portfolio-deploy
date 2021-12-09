@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Grid, Image, Button, Segment, Form, Icon, Modal } from "semantic-ui-react";
+import { Grid, Image, Button, Segment, Form, Modal } from "semantic-ui-react";
 import { StatusbarContext } from "../../Context";
 
 const StatusTypes = require('../../configs/status.json');
@@ -95,8 +95,7 @@ const ImageClassifier = () => {
                             <Grid.Row centered>                                
                                     <Button onClick={LoadImageURL}>Load Image</Button>           
                                     <Button onClick={HandlePredictClick}>Predict</Button>
-                                    <Button primary icon onClick={OpenHelpModal}>
-                                        
+                                    <Button primary icon='question circle' onClick={OpenHelpModal}>                                        
                                     </Button>                                                              
                             </Grid.Row>
                         </Grid>

@@ -30,7 +30,9 @@ function App() {
   const [globalStatus, setGlobalStatus] = useState( {'status' : status.Ready, 'statusText' : 'Ready'} );
   const [render3DLoaded, setRender3DLoaded] = useState(false);
   const [render3DVisibility, setRender3DVisibility] = useState('hidden');
+
   const [homeKyleTextingTrrigger, setHomeKyleTextingTrrigger] = useState(false)
+  const [showTextWithoutTyping, setshowTextWithoutTyping] = useState(false)
                       
   
   const navbar = useRef();
@@ -52,8 +54,12 @@ function App() {
     setHomeKyleTextingTrrigger(true);
   }
 
+  const handleFinishedTyping = () => {
+    setshowTextWithoutTyping(true);
+  }
+
   useEffect(() => {      
-      
+      // handleNavbarPulled()
       window.addEventListener("resize", handleResize, false);     
       }, []);
 
@@ -64,15 +70,15 @@ function App() {
         <div style={{ backgroundColor : "#ffffff"}}>
         <StatusbarContext.Provider value={{globalStatus, setGlobalStatus}}>
           <Context3D.Provider value={{handleOnFinishedLoading3D, handleNavbarPulled, render3DLoaded, setRender3DLoaded,
-            handleKyleTexting}}
+            handleKyleTexting, handleFinishedTyping}}
           >
             <div ref={navbar} style={{position : 'absolute', top : -60, zIndex : 10, width : windowSize.width}}>          
               <Navbar/>
-            </div>  
-            <div style={{visibility : render3DVisibility}}>
-              <Render3D innerHeight = {window.innerHeight} innerWidth = {window.innerWidth}/>  
-            </div>
-            <div style={{overflowY: "scroll", marginLeft : '1%', marginRight : '1%', height : window.innerHeight - 105, marginTop : 60 }} >
+            </div>              
+            <div style={{overflowY: "scroll", marginLeft : '0%', marginRight : '0%', height : windowSize.height - 105, marginTop : 60 }} >
+              <div style={{visibility : render3DVisibility}}>
+                <Render3D/>  
+              </div>
               {!render3DLoaded ? 
                 <div>
                 <Dimmer active inverted>
@@ -82,7 +88,7 @@ function App() {
                 :
                 <div/>  
               }  
-              <AppRoutes homeKyleTextingTrrigger={homeKyleTextingTrrigger}/> 
+              <AppRoutes homeKyleTextingTrrigger={homeKyleTextingTrrigger} showTextWithoutTyping={showTextWithoutTyping}/> 
             </div>    
             <Statusbar status={globalStatus.status} statusText={globalStatus.statusText}/>
           </Context3D.Provider>

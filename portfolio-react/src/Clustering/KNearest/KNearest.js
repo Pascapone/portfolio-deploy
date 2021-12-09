@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import KNearestSidebar from "./KNearestSidebar";
 import { ClusterinContext, StatusbarContext } from "../../Context";
 import { Scatter, CartesianGrid, XAxis, YAxis, ZAxis, ComposedChart, Cell  } from 'recharts'
-import { Grid } from "semantic-ui-react";
+import { Grid, Segment } from "semantic-ui-react";
 
 const status = require('../../configs/status.json')
 
@@ -114,9 +114,10 @@ const KNearest = () => {
                     <Grid.Column width={14}>
                         <h1>K-Nearest Neighbors</h1>
                         <div>
+                            <Segment style={{width : 870, height : 500, margin : 'auto'}}>
                             <ComposedChart width={800}
                                 height={450}
-                                style={{margin : 'auto'}}
+                                style={{marginTop : 20, marginRight : 50}}
                                 >
                                     <CartesianGrid />
                                     <XAxis dataKey="x" name="x" type="number"/>
@@ -133,6 +134,7 @@ const KNearest = () => {
                                         ))}
                                     </Scatter>
                             </ComposedChart>
+                            </Segment>
                         </div>   
                     </Grid.Column>
                 </Grid>                 

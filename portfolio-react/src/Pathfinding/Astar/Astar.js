@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import AstarSidebar from './AstarSidebar';
-import { Grid } from 'semantic-ui-react'
+import { Grid, Segment } from 'semantic-ui-react'
 import RenderGrid from '../RenderGrid';
 import { PathfindingContext, StatusbarContext } from '../../Context';
 
@@ -170,17 +170,20 @@ const Astar = () => {
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <h1>A* Pathfinding</h1>
-                        <div style={{marginTop: 40, height : rows * nodeSize, width : cols * nodeSize, marginRight : "auto", marginLeft : "auto"}}>
+                        <Segment style={{ width : cols * (nodeSize+2) + 70, height : rows * (nodeSize+4) + 40, margin : 'auto'}}>
+                        <div style={{height : rows * (nodeSize+4), width : cols * (nodeSize+2), margin : "auto", marginTop : 20}}>
                             <Grid>
+                                
                                 <RenderGrid width={nodeSize}
                                     height={nodeSize} 
                                     rows={rows} 
                                     cols={cols} 
                                     setRerender={setRerender} 
                                     rerender={rerender}
-                                    />
+                                    />                                
                             </Grid>
                         </div>
+                        </Segment>
                     </Grid.Column>
                 </Grid>      
             </div>

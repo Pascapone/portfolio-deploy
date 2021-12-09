@@ -20,9 +20,25 @@ const Render3D = (props) => {
   const mount = useRef(null)
   
   const {handleOnFinishedLoading3D, handleNavbarPulled, render3DLoaded, setRender3DLoaded, handleKyleTexting } = useContext(Context3D);
-  
+  const canvasMarginRight = 37;
+  const canvasMarginBottom = 60;
 
   useEffect(() => {
+
+    
+
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    function onWindowResize(){
+
+        camera.aspect = (window.innerWidth-canvasMarginRight) / (window.innerHeight-canvasMarginBottom);
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth-canvasMarginRight, (window.innerHeight-canvasMarginBottom) );
+
+    }
+
+
     const start = () => {
       if (!frameId) {
         frameId = requestAnimationFrame(update)
@@ -90,6 +106,7 @@ const Render3D = (props) => {
 
             kyleRobot.animationSequenceHandler.addListenerToStep('Navbar Pull', 'start', () => handleNavbarPulled(), false)
 
+            kyleRobot.animationSequenceHandler.addListenerToStep('Turn To Camera', 'finished', () => lookAtPosition(kyleRobot.sceneObject, camera.position), false)
             kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'start', () => handleKyleTexting(), false)
             
             
@@ -148,6 +165,17 @@ const Render3D = (props) => {
       return Math.abs(x);
     }
 
+    const lookAtPosition = (sceneObject, target) => { 
+      var forwardSceneObject = new Vector3(0,0,1).applyEuler(new THREE.Euler(sceneObject.rotation.x, sceneObject.rotation.y, sceneObject.rotation.z));
+      var targetPosition = new Vector3().copy(target)
+      
+      var targetDirection = targetPosition.sub(new Vector3().copy(sceneObject.position));
+      var angle = forwardSceneObject.angleTo(targetDirection)
+
+      new RotateToTween(0.5, 'power1', new Vector3(sceneObject.rotation.x, sceneObject.rotation.y + angle, sceneObject.rotation.z), false, false).play(sceneObject);
+
+    }
+
 
     let frameId;
     let renderer;
@@ -164,8 +192,8 @@ const Render3D = (props) => {
     const marginVertical = 0;
     const marginHorizontal = 60;
 
-    const sceneWidth = props.innerWidth
-    const sceneHeight = props.innerHeight
+    const sceneWidth = window.innerWidth - canvasMarginRight
+    const sceneHeight = window.innerHeight - canvasMarginBottom
     const sceneRatio = sceneWidth/sceneHeight    
 
     sceneInitiated = false;
@@ -274,8 +302,8 @@ const Render3D = (props) => {
 
  
   return (
-    <div style={{ margin : 'auto', padding : 0, position : 'absolute',  width : props.innerWidth, height : props.innerHeight, top: 0}}>
-      <div style={{  padding : 0, width : props.innerWidth, height : props.innerHeight}} 
+    <div style={{ margin : 'auto', padding : 0, position : 'absolute',  width : window.innerWidth-canvasMarginRight, height : window.innerHeight-canvasMarginBottom, top: 0}}>
+      <div style={{  padding : 0, width : window.innerWidth-canvasMarginRight, height : window.innerHeight-canvasMarginBottom}} 
         ref={mount} />
     </div>
   )

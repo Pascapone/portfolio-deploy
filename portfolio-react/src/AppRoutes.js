@@ -12,7 +12,9 @@ const AppRoutes = (props)=> {
     console.log('APP ROUTES RENDER')
     return (     
         <Routes>
-            <Route path="/" element={<Home homeKyleTextingTrrigger={props.homeKyleTextingTrrigger}/>} />        
+            <Route path="/" element={<Home homeKyleTextingTrrigger={props.homeKyleTextingTrrigger} 
+                showTextWithoutTyping={props.showTextWithoutTyping}/>} 
+            />        
             <Route path="/about" element={<About />} />    
             <Route path="/mnist-classifier" element={<MNISTClassiefier />} /> 
             <Route path="/imagenet-classifier" element={<ImageClassifier />} />   

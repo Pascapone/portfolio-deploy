@@ -159,7 +159,7 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
     new AnimationSequenceStep(FBXAnimationNames.StandLeftTurn, 1, 0.2,
       [
         new RotateToTween(0.8, 'none', new Vector3(0, 0, 0))
-      ]),
+      ], 'Turn To Camera'),
     new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
     new AnimationSequenceStep(FBXAnimationNames.TextingWhileStanding, 11, 0.5, [], 'Kyle Texting'),
   ];
