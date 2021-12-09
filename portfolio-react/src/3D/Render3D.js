@@ -10,7 +10,7 @@ import robotFont from '../Fonts/Roboto Black_Italic.json'
 
 import { AnimationLoader, FBXModel, RotateToTween, TranslateToTween, customEventTracker } from './AnimationSystem';
 import { FBXAnimationNames, kyleAnimationLoaders, createIntroSequence, kyleAnimations } from './Animations';
-import { Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 
 import { Context3D } from "../Context";
 
@@ -106,7 +106,8 @@ const Render3D = (props) => {
 
             kyleRobot.animationSequenceHandler.addListenerToStep('Navbar Pull', 'start', () => handleNavbarPulled(), false)
 
-            kyleRobot.animationSequenceHandler.addListenerToStep('Turn To Camera', 'finished', () => lookAtPosition(kyleRobot.sceneObject, camera.position), false)
+            kyleRobot.animationSequenceHandler.addListenerToStep('Turn To Camera', 'finished', () => lookAtPositionTween(
+              kyleRobot.sceneObject, camera.position, 1, 'power1'), false)
             kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'start', () => handleKyleTexting(), false)
             
             
@@ -165,17 +166,35 @@ const Render3D = (props) => {
       return Math.abs(x);
     }
 
-    const lookAtPosition = (sceneObject, target) => { 
-      var forwardSceneObject = new Vector3(0,0,1).applyEuler(new THREE.Euler(sceneObject.rotation.x, sceneObject.rotation.y, sceneObject.rotation.z));
-      var targetPosition = new Vector3().copy(target)
-      
-      var targetDirection = targetPosition.sub(new Vector3().copy(sceneObject.position));
-      var angle = forwardSceneObject.angleTo(targetDirection)
+    const lookAtPositionTween = (sceneObject, target, duration, ease='none', onlyY=true) => {       
 
-      new RotateToTween(0.5, 'power1', new Vector3(sceneObject.rotation.x, sceneObject.rotation.y + angle, sceneObject.rotation.z), false, false).play(sceneObject);
+      var forwardSceneObject = new Vector3(0,0,1).applyEuler(new THREE.Euler(sceneObject.rotation.x, sceneObject.rotation.y, sceneObject.rotation.z));
+      var targetPosition = new Vector3().copy(target)      
+      var targetDirection = targetPosition.sub(new Vector3().copy(sceneObject.position));
+
+      var quat = new Quaternion().setFromUnitVectors(forwardSceneObject, targetDirection.normalize());
+      var currentQuat = new Quaternion().setFromEuler(sceneObject.rotation);
+      
+      currentQuat.multiply(quat);
+
+      var targetEuler = new THREE.Euler().setFromQuaternion(currentQuat);
+
+      if(onlyY){
+        targetEuler.x = sceneObject.rotation.x;
+        targetEuler.z = sceneObject.rotation.z;
+      }
+
+      new RotateToTween(duration, ease, targetEuler).play(sceneObject);
+    }
+
+    function onMouseMove( event ) {
+   
+      mouse.x = ( event.clientX / (window.innerWidth - canvasMarginRight) ) * 2 - 1;
+      mouse.y = - ( event.clientY / (window.innerHeight - canvasMarginBottom) ) * 2 + 1;
 
     }
 
+    const mouse = new THREE.Vector2();
 
     let frameId;
     let renderer;
@@ -188,9 +207,6 @@ const Render3D = (props) => {
     let pascalSchottText;
 
     const fieldOfView = 75;
-
-    const marginVertical = 0;
-    const marginHorizontal = 60;
 
     const sceneWidth = window.innerWidth - canvasMarginRight
     const sceneHeight = window.innerHeight - canvasMarginBottom
@@ -213,6 +229,8 @@ const Render3D = (props) => {
 
     document.addEventListener('keydown', handleKeyDown, false); 
     document.addEventListener('keyup', handleKeyUp, false);  
+
+    window.addEventListener( 'mousemove', onMouseMove, false );
 
     // Scene Setup
     scene = new THREE.Scene();       
