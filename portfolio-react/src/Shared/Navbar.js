@@ -17,8 +17,8 @@ const Navbar = () => {
   }
 
   return (      
-    <Menu pointing>
-      <Menu.Item>
+    <Menu>
+      <Menu.Item pointing onClick={() => handleNavigate('/')}>
         <img src='./images/Logo.png' />
       </Menu.Item>      
       <Menu.Item

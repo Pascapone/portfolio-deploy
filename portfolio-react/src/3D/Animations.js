@@ -123,7 +123,7 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
     //   ]),                          
     new AnimationSequenceStep(FBXAnimationNames.JumpToFreehang, 2, 0.5,
       [
-        new TranslateToTween(2, jumpToFreeHangEase, new Vector3(0, 0.2, 2))
+        new TranslateToTween(2, jumpToFreeHangEase, new Vector3(0, 0.3, 2))
       ]),
     new AnimationSequenceStep(FBXAnimationNames.HangingIdle, 0.5, 0.5),
     new AnimationSequenceStep(FBXAnimationNames.BracedToFreeHang, 1, 0.5,

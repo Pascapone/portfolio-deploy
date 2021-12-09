@@ -120,8 +120,7 @@ const Render3D = (props) => {
       }
   
       renderScene()
-      frameId = window.requestAnimationFrame(update)
-    };   
+      frameId = window.requestAnimationFrame(update)    };   
 
     const handleKeyDown = (e) => {
       switch (e.code){
@@ -190,9 +189,7 @@ const Render3D = (props) => {
     function onMouseMove( event ) {
    
       mouse.x = ( event.clientX / (window.innerWidth - canvasMarginRight) ) * 2 - 1;
-      mouse.y = - ( event.clientY / (window.innerHeight - canvasMarginBottom) ) * 2 + 1;
-
-    }
+      mouse.y = - ( event.clientY / (window.innerHeight - canvasMarginBottom) ) * 2 + 1;    }
 
     const mouse = new THREE.Vector2();
 
@@ -257,14 +254,13 @@ const Render3D = (props) => {
     const textConfig = {
       font: font,
       size: 0.6,
-      height: 0.1,      
+      height: 0.0001,      
     }
 
     pascalSchottText = new THREE.Object3D();
-
-    const textColor = '#cee6eb'
-    var geometry = new TextGeometry( 'Pascal',  textConfig);
-  
+    // '#cee6eb'
+    const textColor = '#4e8dc2'
+    var geometry = new TextGeometry( 'Pascal',  textConfig);  
     var material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
     var pascalText =  new THREE.Mesh( geometry, material );
     pascalSchottText.add( pascalText );

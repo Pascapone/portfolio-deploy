@@ -10,8 +10,7 @@ const Notebooks = () => {
                 <div style={{ marginTop : 20 }}>
                 <Icon name='hourglass outline' size='big'/>    
                 </div>           
-            </Segment>
-            
+            </Segment>            
         </div>
     )
 }
