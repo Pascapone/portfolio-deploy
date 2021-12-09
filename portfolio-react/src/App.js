@@ -50,7 +50,6 @@ function App() {
   }
 
   const handleKyleTexting = () => {
-    console.log('TRIGGER APP TEXTING')
     setHomeKyleTextingTrrigger(true);
   }
 
@@ -64,6 +63,8 @@ function App() {
       }, []);
 
 
+  
+
   return (
     <div className="App">  
       <Provider theme={defaultTheme} colorScheme="light" >
@@ -76,7 +77,7 @@ function App() {
               <Navbar/>
             </div>              
             <div style={{overflowY: "scroll", marginLeft : '0%', marginRight : '0%', height : windowSize.height - 105, marginTop : 60 }} >
-              <div style={{visibility : render3DVisibility}}>
+              <div style={{visibility : render3DVisibility, pointerEvents: 'none'}}>
                 <Render3D/>  
               </div>
               {!render3DLoaded ? 

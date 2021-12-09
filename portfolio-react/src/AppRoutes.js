@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Routes, Route } from "react-router-dom";
 import Home from './Home/Home';
 import About from './About/About';
@@ -9,8 +9,21 @@ import KNearest from './Clustering/KNearest/KNearest';
 import Notebooks from './Notebooks/Notebooks';
 
 const AppRoutes = (props)=> {
-    console.log('APP ROUTES RENDER')
-    return (     
+    const mounted = useRef();
+    useEffect(() => {
+        if (!mounted.current) {
+            console.log('Did Mount!')
+        } 
+        else {
+            console.log('Did Update!')
+        }
+
+        return () => {    
+            console.log('Did Unmount!')      
+        }
+    }, []);
+
+    return (             
         <Routes>
             <Route path="/" element={<Home homeKyleTextingTrrigger={props.homeKyleTextingTrrigger} 
                 showTextWithoutTyping={props.showTextWithoutTyping}/>} 

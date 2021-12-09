@@ -6,7 +6,7 @@ import { Button } from "semantic-ui-react";
 
 
 const Home = (props) => {  
-    const [showText, setShowText] = useState(false)
+    const [showText, setShowText] = useState(false);
     
     const { render3DLoaded, handleFinishedTyping } = useContext(Context3D);
 
@@ -18,8 +18,10 @@ const Home = (props) => {
         window.open("https://github.com/Pascapone/portfolio-deploy");
     }
 
-    useEffect(() => {
+    useEffect(() => {    
+
         return () => {
+            handleFinishedTyping();
         }
     }, [])    
 

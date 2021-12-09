@@ -6,9 +6,12 @@ const Notebooks = () => {
         <div>            
             <h1>Notebooks</h1>
             <Segment style={{ width  : 600, margin : 'auto' }}>
-                Work in progress                
+                <span>Work in progress...</span>
+                <div style={{ marginTop : 20 }}>
+                <Icon name='hourglass outline' size='big'/>    
+                </div>           
             </Segment>
-            <Icon name='hourglass outline' size='big' style={{ marginTop : 40 }}/>
+            
         </div>
     )
 }
