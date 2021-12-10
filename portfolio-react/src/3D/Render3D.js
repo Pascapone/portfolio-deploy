@@ -19,7 +19,6 @@ import { Context3D } from "../Context";
 import kyleModel from '../FBX/Kyle.fbx'
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import smartphoneFBX from '../FBX/mobile.fbx'
 
 const Render3D = (props) => {
   const mount = useRef(null)
@@ -45,7 +44,6 @@ const Render3D = (props) => {
   let kyleRobot;
   let sceneInitiated;
   let pascalSchottText;
-  let mobile;
   let modelsLoaded;
 
   const fieldOfView = 75;
@@ -121,29 +119,7 @@ const Render3D = (props) => {
 
     kyleRobot = new FBXModel(kyleModel, scene, new THREE.Vector3(0, -1, -10), new THREE.Vector3(0,0,0),
     new THREE.Vector3(0.01,0.01,0.01), kyleAnimationLoaders, true, true, kyleAnimations, loader);
-
-    // Load Smartphone
-    loader.load( smartphoneFBX, ( sceneObject ) => {  
-      
-      sceneObject.scale.set(0.08, 0.065, 0.065);
-      sceneObject.position.set(5, 10, 0);    
-      sceneObject.rotation.set(Math.PI/2 *0.2, -Math.PI*0.9 , Math.PI/2 * 1.3);  
-      
-      sceneObject.traverse(  ( child ) => {
-
-          if ( child.isMesh ) {  
-            child.castShadow = true;
-            child.receiveShadow = true;    
-          } 
-        }
-      )   
-
-      mobile = sceneObject;
-      sceneObject.visible=false;
-      kyleRobot.sceneObject.children[1].skeleton.bones[25].add( sceneObject );
-    });
-
-         
+          
     // Pascal Text
     const font = new FontLoader().parse(readexFont);
 
@@ -340,11 +316,11 @@ const initScene = () => {
 
   kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'start', () => {
     handleKyleTexting();
-    mobile.visible = true;
+    kyleRobot.sceneObject.smartphone.visible = true;
   }, false)
 
   kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'finished', () => {   
-    mobile.visible = false;
+    kyleRobot.sceneObject.smartphone.visible = false;
   }, false)
   
   

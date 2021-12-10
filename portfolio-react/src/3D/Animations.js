@@ -114,62 +114,62 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
   }
 
   const introSequence = [    
-    // new AnimationSequenceStep(FBXAnimationNames.Running, 3, 0.5, 
-    //   [
-    //     new TranslateToTween(3, 'none', new Vector3(0, -1, 1))
-    //   ]),  
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5, 
-    //   [
-    //     new TranslateToTween(0.5, 'power1.out', new Vector3(0, -1, 2))
-    //   ]),               
-    // new AnimationSequenceStep(FBXAnimationNames.JumpToFreehang, 2, 0.5,
-    //   [
-    //     new TranslateToTween(2, jumpToFreeHangEase, new Vector3(0, 0.3, 2))
-    //   ]),
-    // new AnimationSequenceStep(FBXAnimationNames.HangingIdle, 0.5, 0.5),
-    // new AnimationSequenceStep(FBXAnimationNames.BracedToFreeHang, 1, 0.5,
-    //   [
-    //     new TranslateToTween(0.7, 'power1.in', new Vector3(0, 0.6, 2))
-    //   ]),   
-    // new AnimationSequenceStep(FBXAnimationNames.FallingIdle, 0.5, 0.5,
-    //   [
-    //     new TranslateToTween(0.5, 'power1.in', new Vector3(0, 0.1, 2)),                               
-    //   ], 'Navbar Pull'),  
-    // new AnimationSequenceStep(FBXAnimationNames.HardLanding, 1, 0.1,
-    //   [
-    //     new TranslateToTween(0.4, 'none', new Vector3(0, -1, 2)),                               
-    //   ]), 
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
-    // new AnimationSequenceStep(FBXAnimationNames.StandRightTurn, 0.8, 0.2,
-    // [
-    //   new RotateToTween(0.8, 'power1.inOut', new Vector3(0, -Math.PI/2, 0))
-    // ]),    
-    // new AnimationSequenceStep(FBXAnimationNames.Running, 2, 0.7, 
-    //   [
-    //     new TranslateToTween(2, 'power1.in', new Vector3(-hScreenEdgeByZPosition(2) + 0.8, -1, 2), false)
-    //   ]),
+    new AnimationSequenceStep(FBXAnimationNames.Running, 3, 0.5, 
+      [
+        new TranslateToTween(3, 'none', new Vector3(0, -1, 1))
+      ]),  
+    new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5, 
+      [
+        new TranslateToTween(0.5, 'power1.out', new Vector3(0, -1, 2))
+      ]),               
+    new AnimationSequenceStep(FBXAnimationNames.JumpToFreehang, 2, 0.5,
+      [
+        new TranslateToTween(2, jumpToFreeHangEase, new Vector3(0, 0.3, 2))
+      ]),
+    new AnimationSequenceStep(FBXAnimationNames.HangingIdle, 0.5, 0.5),
+    new AnimationSequenceStep(FBXAnimationNames.BracedToFreeHang, 1, 0.5,
+      [
+        new TranslateToTween(0.7, 'power1.in', new Vector3(0, 0.6, 2))
+      ]),   
+    new AnimationSequenceStep(FBXAnimationNames.FallingIdle, 0.5, 0.5,
+      [
+        new TranslateToTween(0.5, 'power1.in', new Vector3(0, 0.1, 2)),                               
+      ], 'Navbar Pull'),  
+    new AnimationSequenceStep(FBXAnimationNames.HardLanding, 1, 0.1,
+      [
+        new TranslateToTween(0.4, 'none', new Vector3(0, -1, 2)),                               
+      ]), 
+    new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
+    new AnimationSequenceStep(FBXAnimationNames.StandRightTurn, 0.8, 0.2,
+    [
+      new RotateToTween(0.8, 'power1.inOut', new Vector3(0, -Math.PI/2, 0))
+    ]),    
+    new AnimationSequenceStep(FBXAnimationNames.Running, 2, 0.7, 
+      [
+        new TranslateToTween(2, 'power1.in', new Vector3(-hScreenEdgeByZPosition(2) + 0.8, -1, 2), false)
+      ]),
 
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5,
-    //   [
-    //   new TranslateToTween(0.5, 'power1.out', new Vector3(-hScreenEdgeByZPosition(2) + 0.3, -1, 2), false)
-    //   ]),
-    // new AnimationSequenceStep(FBXAnimationNames.PullHeavyObject, 4, 0.5, 
-    //   [
-    //     new TranslateToTween(70/60, 'power1.inOut', new Vector3(0, 0, -1), true, true)
-    //   ], 'Pull Name'),
-    // new AnimationSequenceStep(FBXAnimationNames.WipingSweat, 2, 0.5),
-    // new AnimationSequenceStep(FBXAnimationNames.StandLeftTurn, 1, 0.2,
-    //   [
-    //     new RotateToTween(0.8, 'none', new Vector3(0, 0, 0))
-    //   ], 'Turn To Camera'),
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
-    // new AnimationSequenceStep(FBXAnimationNames.TextingWhileStanding, 11, 0.5, [], 'Kyle Texting'),
-    
-    
-    new AnimationSequenceStep(FBXAnimationNames.Idle, 2, 0.5, [
-      new TranslateToTween(0.5, 'none', new Vector3(0, -1, 2), false, false) // DEBUG
-    ]),
+    new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5,
+      [
+      new TranslateToTween(0.5, 'power1.out', new Vector3(-hScreenEdgeByZPosition(2) + 0.3, -1, 2), false)
+      ]),
+    new AnimationSequenceStep(FBXAnimationNames.PullHeavyObject, 4, 0.5, 
+      [
+        new TranslateToTween(70/60, 'power1.inOut', new Vector3(0, 0, -1), true, true)
+      ], 'Pull Name'),
+    new AnimationSequenceStep(FBXAnimationNames.WipingSweat, 2, 0.5),
+    new AnimationSequenceStep(FBXAnimationNames.StandLeftTurn, 1, 0.2,
+      [
+        new RotateToTween(0.8, 'none', new Vector3(0, 0, 0))
+      ], 'Turn To Camera'),
+    new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
     new AnimationSequenceStep(FBXAnimationNames.TextingWhileStanding, 11, 0.5, [], 'Kyle Texting'),
+    
+    
+    // new AnimationSequenceStep(FBXAnimationNames.Idle, 2, 0.5, [
+    //   new TranslateToTween(0.5, 'none', new Vector3(0, -1, 2), false, false) // DEBUG
+    // ]),
+    // new AnimationSequenceStep(FBXAnimationNames.TextingWhileStanding, 11, 0.5, [], 'Kyle Texting'),
   ];
 
   return introSequence;

@@ -456,8 +456,11 @@ export class FBXModel{
         this.loadAnimations(animationLoaders)
 
         this.scene.add( sceneObject );
-        console.log('KYLE SCENE OBJECT !!!!!!!!!!', sceneObject.children[1])
+        console.log('KYLE SCENE OBJECT !!!!!!!!!!', sceneObject.children[1].skeleton.bones[25].children[5])
         sceneObject.children[1]['ParentFBX'] = this;
+        sceneObject.smartphone = sceneObject.children[1].skeleton.bones[25].children[5];
+        sceneObject.smartphone.visible = false;
+        console.log(sceneObject);
         this.sceneObject = sceneObject;
         
       });
