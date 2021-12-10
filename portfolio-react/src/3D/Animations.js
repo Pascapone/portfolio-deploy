@@ -18,6 +18,8 @@ import pullHeavyObjectFBX from '../FBX/Animations/Pull Heavy Object.fbx'
 import textingWhileStandingFBX from '../FBX/Animations/Texting While Standing.fbx'
 import walkStrifeLeftFBX from '../FBX/Animations/Walk Strafe Left.fbx'
 import walkStrifeRightFBX from '../FBX/Animations/Walk Strafe Right.fbx'
+import wavingFBX from '../FBX/Animations/Waving.fbx'
+import wipingSweatFBX from '../FBX/Animations/Wiping Sweat.fbx'
 
 gsap.registerPlugin(CustomEase);
 
@@ -36,7 +38,9 @@ export const FBXAnimationNames = { Idle : 'Idle',
                                   PullHeavyObject : 'PullHeavyObject',
                                   TextingWhileStanding : 'TextingWhileStanding', 
                                   WalkStrafeLeft : 'WalkStrafeLeft',
-                                  WalkStrafeRight : 'WalkStrafeRight'                              
+                                  WalkStrafeRight : 'WalkStrafeRight',
+                                  Waving : 'Waving',
+                                  WipingSweat : 'WipingSweat'                              
                                 }
 
 const idleAnimation = new AnimationLoader(FBXAnimationNames.Idle, idleAnimationFBX);
@@ -53,6 +57,8 @@ const pullHeavyObject = new AnimationLoader(FBXAnimationNames.PullHeavyObject, p
 const textingWhileStanding = new AnimationLoader(FBXAnimationNames.TextingWhileStanding, textingWhileStandingFBX);
 const walkStrifeLeft = new AnimationLoader(FBXAnimationNames.WalkStrafeLeft, walkStrifeLeftFBX);
 const walkStrifeRight = new AnimationLoader(FBXAnimationNames.WalkStrafeRight, walkStrifeRightFBX);
+const waving = new AnimationLoader(FBXAnimationNames.Waving, wavingFBX);
+const wipingSweat = new AnimationLoader(FBXAnimationNames.WipingSweat, wipingSweatFBX);
 
 export const kyleAnimationLoaders = [idleAnimation,
                                     runningAnimation,
@@ -67,7 +73,9 @@ export const kyleAnimationLoaders = [idleAnimation,
                                     pullHeavyObject,
                                     textingWhileStanding,
                                     walkStrifeLeft,
-                                    walkStrifeRight];
+                                    walkStrifeRight,
+                                    waving,
+                                    wipingSweat];
 
 
 
@@ -88,7 +96,9 @@ export const kyleAnimations = [
                                 new FBXAnimation(FBXAnimationNames.PullHeavyObject, FBXAnimationNames.PullHeavyObject),
                                 new FBXAnimation(FBXAnimationNames.TextingWhileStanding, FBXAnimationNames.TextingWhileStanding),
                                 new FBXAnimation(FBXAnimationNames.WalkStrafeLeft, FBXAnimationNames.WalkStrafeLeft),
-                                new FBXAnimation(FBXAnimationNames.WalkStrafeRight, FBXAnimationNames.WalkStrafeRight)                                    
+                                new FBXAnimation(FBXAnimationNames.WalkStrafeRight, FBXAnimationNames.WalkStrafeRight),
+                                new FBXAnimation(FBXAnimationNames.Waving, FBXAnimationNames.Waving),  
+                                new FBXAnimation(FBXAnimationNames.WipingSweat, FBXAnimationNames.WipingSweat)                                   
                               ]
 
 
@@ -103,12 +113,7 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
     return Math.abs(x);
   }
 
-  const introSequence = [
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 1, 1),
-    // new AnimationSequenceStep(FBXAnimationNames.Running, 1, 1, 
-    //   [
-    //     new TranslateToTween(1, 'power1.in', new Vector3(0, -1, -9))
-    //   ]), 
+  const introSequence = [    
     new AnimationSequenceStep(FBXAnimationNames.Running, 3, 0.5, 
       [
         new TranslateToTween(3, 'none', new Vector3(0, -1, 1))
@@ -116,11 +121,7 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
     new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5, 
       [
         new TranslateToTween(0.5, 'power1.out', new Vector3(0, -1, 2))
-      ]),    
-    // new AnimationSequenceStep(FBXAnimationNames.Idle, 1, 1, 
-    //   [
-    //     new TranslateToTween(1, 'power1.out', new Vector3(0, -1, 2))
-    //   ]),                          
+      ]),               
     new AnimationSequenceStep(FBXAnimationNames.JumpToFreehang, 2, 0.5,
       [
         new TranslateToTween(2, jumpToFreeHangEase, new Vector3(0, 0.3, 2))
@@ -156,16 +157,26 @@ export const createIntroSequence = (fieldOfView, sceneRatio, cameraZ) => {
       [
         new TranslateToTween(70/60, 'power1.inOut', new Vector3(0, 0, -1), true, true)
       ], 'Pull Name'),
+    new AnimationSequenceStep(FBXAnimationNames.WipingSweat, 2, 0.5),
     new AnimationSequenceStep(FBXAnimationNames.StandLeftTurn, 1, 0.2,
       [
         new RotateToTween(0.8, 'none', new Vector3(0, 0, 0))
       ], 'Turn To Camera'),
     new AnimationSequenceStep(FBXAnimationNames.Idle, 0.5, 0.5),
     new AnimationSequenceStep(FBXAnimationNames.TextingWhileStanding, 11, 0.5, [], 'Kyle Texting'),
+    
+    
+    // new AnimationSequenceStep(FBXAnimationNames.Idle, 2, 0.5, [
+    //   new TranslateToTween(0.5, 'none', new Vector3(0, -1, 2), false, false) // DEBUG
+    // ]),
   ];
 
   return introSequence;
 }
+
+export const wavingSequence = [
+  new AnimationSequenceStep(FBXAnimationNames.Waving, 3.5, 0.5),
+]
 
 
 

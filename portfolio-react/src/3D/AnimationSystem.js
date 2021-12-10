@@ -88,11 +88,12 @@ export class AnimationLoader{
 }
 
 export class Tween{
-  constructor(duration, gsapEase, local = false, loop=false){
+  constructor(duration, gsapEase, local = false, loop=false, followupTweens=null){
     this.duration = duration;
     this.gsapEase = gsapEase;
     this.local = local;
     this.loop = loop;
+    this.followupTweens = followupTweens;
     
     this.running = false;
     this.gsapTween =  null;
@@ -112,8 +113,8 @@ export class Tween{
 }
 
 export class TranslateToTween extends Tween{
-  constructor(duration, gsapEase, position, local=false, loop=false){
-    super(duration, gsapEase, local, loop);
+  constructor(duration, gsapEase, position, local=false, loop=false, followupTweens=null){
+    super(duration, gsapEase, local, loop, followupTweens);
     this.position = position; 
 
   }
@@ -141,6 +142,12 @@ export class TranslateToTween extends Tween{
   stop(){
     this.gsapTween.kill()
     this.running = false;
+
+    if(this.followupTweens){
+      for(const tween of this.followupTweens){
+        tween.play(this.sceneObject);
+      }
+    }
   }  
 
   onComplete = () => {
@@ -150,14 +157,19 @@ export class TranslateToTween extends Tween{
       this.play(this.sceneObject);
     }
     else{
+      if(this.followupTweens){
+        for(const tween of this.followupTweens){
+          tween.play(this.sceneObject);
+        }
+      }
       this.running = false;
     }
   }
 }
 
 export class RotateToTween extends Tween{
-  constructor(duration, gsapEase, rotation, local=false, loop=false){
-    super(duration, gsapEase, local, loop);
+  constructor(duration, gsapEase, rotation, local=false, loop=false, followupTweens=null){
+    super(duration, gsapEase, local, loop, followupTweens);
     this.rotation = rotation;     
 
     this.progress = 0;
@@ -200,6 +212,12 @@ export class RotateToTween extends Tween{
   stop(){
     this.gsapTween.kill()
     this.running = false;
+
+    if(this.followupTweens){
+      for(const tween of this.followupTweens){
+        tween.play(this.sceneObject);
+      }
+    }
   }
 
   onComplete = () => {    
@@ -209,6 +227,11 @@ export class RotateToTween extends Tween{
       this.play(this.sceneObject);
     }
     else{
+      if(this.followupTweens){
+        for(const tween of this.followupTweens){
+          tween.play(this.sceneObject);
+        }
+      }      
       this.running = false;
     }    
   }
@@ -229,6 +252,9 @@ class AnimationHandler{
   playAnimation(name, fadeDuration=0, loop=true){   
     var nextAnimation = this.fbxAnimations[name];    
         
+    console.log(name)
+    console.log(nextAnimation)
+    console.log(this.fbxAnimations)
     if(loop){
       nextAnimation.animationAction.setLoop(THREE.LoopRepeat);
     }
@@ -250,7 +276,7 @@ class AnimationHandler{
   }   
 }
 
-class AnimationSequenceHandler{
+export class AnimationSequenceHandler{
   constructor(animationHandler, defaultAnimationName, defaultAnimationFadeDuration){
     this.animationSequence = [];
     this.currentAnimationSequenceStep = null;    
@@ -335,8 +361,7 @@ class AnimationSequenceHandler{
 }
 
 export class FBXModel{
-  constructor(modelPath, scene, position, rotation, scale, animationLoaders = null, castShadow =true, receiveShadow = true, defaultAnimationName = 'Idle', 
-  defaultAnimationFadeDuration = 0.5, fbxAnimations){
+  constructor(modelPath, scene, position, rotation, scale, animationLoaders = null, castShadow =true, receiveShadow = true, fbxAnimations, fbxLoader){
     
     this.modelPath = modelPath;
     this.position = position;
@@ -346,8 +371,6 @@ export class FBXModel{
     this.receiveShadow = receiveShadow;
     this.scene = scene;
     this.animationLoaders = animationLoaders;
-    this.defaultAnimationName = defaultAnimationName;
-    this.defaultAnimationFadeDuration = defaultAnimationFadeDuration;
     this.fbxAnimations = fbxAnimations;
 
     this.modelLoaded = false;
@@ -356,39 +379,14 @@ export class FBXModel{
     this.mixer = null;
     this.animationActions = {};
     this.animationHandler = null;  
-    this.animationSequenceHandler = null;  
-    this.bones = null;  
+    this.animationSequenceHandler = null; 
     this.rootBonePositionOffset = null; 
-    this.loadingManger = null;
 
     this.loopListeners = [];
 
-    this.createLoadingManager(); 
-    this.loader = new FBXLoader(this.loadingManger);
+    this.loader = fbxLoader;
 
     this.loadModel(animationLoaders);
-  }
-
-  createLoadingManager(){
-    this.loadingManger = new THREE.LoadingManager();
-    
-    this.loadingManger.onStart = (url, loaded, total) => {   
-    }
-
-    this.loadingManger.onLoad = () => {
-      
-      this.bones = this.sceneObject.children[1].skeleton.bones;      
-      this.animationSequenceHandler = new AnimationSequenceHandler(this.animationHandler, 
-          this.defaultAnimationName, this.defaultAnimationFadeDuration);
-
-      for(const fbxAnimation of this.fbxAnimations){
-
-        fbxAnimation.animationAction = this.animationActions[fbxAnimation.actionAnimationName];
-        this.animationHandler.fbxAnimations[fbxAnimation.name] = fbxAnimation;
-      }
-      
-      this.modelLoaded = true;
-    }
   }
 
   loadAnimation(animationFilePath, animationName){    
@@ -458,6 +456,8 @@ export class FBXModel{
         this.loadAnimations(animationLoaders)
 
         this.scene.add( sceneObject );
+        console.log('KYLE SCENE OBJECT !!!!!!!!!!', sceneObject.children[1])
+        sceneObject.children[1]['ParentFBX'] = this;
         this.sceneObject = sceneObject;
         
       });

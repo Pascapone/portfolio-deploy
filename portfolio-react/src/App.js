@@ -60,10 +60,7 @@ function App() {
   useEffect(() => {      
       // handleNavbarPulled()
       window.addEventListener("resize", handleResize, false);     
-      }, []);
-
-
-  
+      }, []);  
 
   return (
     <div className="App">  
@@ -77,7 +74,7 @@ function App() {
               <Navbar/>
             </div>              
             <div style={{overflowY: "scroll", marginLeft : '0%', marginRight : '0%', height : windowSize.height - 105, marginTop : 60 }} >
-              <div style={{visibility : render3DVisibility, pointerEvents: 'none'}}>
+              <div style={{visibility : render3DVisibility}}>
                 <Render3D/>  
               </div>
               {!render3DLoaded ? 
@@ -89,7 +86,9 @@ function App() {
                 :
                 <div/>  
               }  
-              <AppRoutes homeKyleTextingTrrigger={homeKyleTextingTrrigger} showTextWithoutTyping={showTextWithoutTyping}/> 
+            
+              <AppRoutes homeKyleTextingTrrigger={homeKyleTextingTrrigger} showTextWithoutTyping={showTextWithoutTyping}/>
+            
             </div>    
             <Statusbar status={globalStatus.status} statusText={globalStatus.statusText}/>
           </Context3D.Provider>

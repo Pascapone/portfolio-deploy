@@ -106,15 +106,17 @@ const KNearest = () => {
     return(        
         <ClusterinContext.Provider value={{handlePopulateGraphClick, setNClusters, setNSamples, setStd, 
             handleFindClustersClicked, setAnimationTime, clusteringRunning, setClusteringRunning}}>
-            <div style={{paddingBottom : 40, minWidth : 1050}}>  
+            <div style={{paddingBottom : 40, minWidth : 1050, pointerEvents : 'none'}}>  
                 <Grid>
                     <Grid.Column width={2} style={{zIndex: 1}}>
-                        <KNearestSidebar/>
+                        <div style={{pointerEvents : 'auto'}}>
+                            <KNearestSidebar/>
+                        </div>
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <h1>K-Nearest Neighbors</h1>
                         <div>
-                            <Segment style={{width : 870, height : 500, margin : 'auto'}}>
+                            <Segment style={{width : 870, height : 500, margin : 'auto', pointerEvents : 'auto'}}>
                             <ComposedChart width={800}
                                 height={450}
                                 style={{marginTop : 20, marginRight : 50}}

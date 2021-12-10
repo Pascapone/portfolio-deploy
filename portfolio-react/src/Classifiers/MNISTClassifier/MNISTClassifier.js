@@ -45,22 +45,20 @@ const MNISTClassifier = () => {
     return (
         <div style={{paddingBottom : 40}}>            
             <h1>MNIST Classifier</h1>
-            <div style={{paddingBottom: 20}}>
+         
             <div style={{width : 500, margin : 'auto'}}>
-                <Segment>
-                    You can draw a digit and let the classifier guess which number it is.<br/>
-                    (One is currently only working reliable with [I] and not the classical [1]. <br/>
-                    The mnist dataset mostly consists of [I]-examples. Fix incoming.)             
-                </Segment>
-            </div>
-            </div>  
-            <div style={{width : 500, margin : 'auto'}}>
-                <Segment>            
+                <Segment>    
+                    <div style={{width : 500, margin : 'auto'}}>                        
+                            You can draw a digit and let the classifier guess which number it is.<br/>
+                            (One is currently only working reliable with [I] and not the classical [1]. <br/>
+                            The mnist dataset mostly consists of [I]-examples. Fix incoming.)   
+                    </div>        
                     <div style={{
                         margin: 'auto', 
                         width : 202,
                         height : 202, 
                         border: '1px solid black',
+                        marginTop : 20,
                         }}>
                         <CanvasDraw ref={canvasRef} canvasWidth={200} canvasHeight={200} brushRadius={20} loadTimeOffset={1}/>
                     </div>  

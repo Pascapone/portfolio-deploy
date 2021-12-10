@@ -161,16 +161,17 @@ const Astar = () => {
         <PathfindingContext.Provider value={{pathfindingGrid, setPathfindingGrid , clearGrid, setClearGrid, 
             selectedNodeType, setSelectedNodeType, handleFindPathClick, showFCost, setShowFCost, result, setResult,
             pathfindingRunning, setPathfindingRunning, handlePopulateGridClick}}>
-            <div style={{paddingBottom : 40, minWidth : 1200}}>
-                <Grid>
-                    <Grid.Column width={2} style={{zIndex: 1}}>
+            {/* <div style={{paddingBottom : 40, minWidth : 40, backgroundColor : 'violet'}}> */}
+                <Grid style={{pointerEvents : 'none'}}>
+                    <Grid.Column width={2} style={{zIndex: 1, pointerEvents : 'auto'}}>
                         <div style={{position : 'absolute', zIndex: 1}}>
                     <AstarSidebar/> 
                 </div>
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <h1>A* Pathfinding</h1>
-                        <Segment style={{ width : cols * (nodeSize+2) + 70, height : rows * (nodeSize+4) + 40, margin : 'auto'}}>
+                        <Segment style={{ width : cols * (nodeSize+2) + 70, height : rows * (nodeSize+4) + 40, 
+                            margin : 'auto', pointerEvents : 'auto'}}>
                         <div style={{height : rows * (nodeSize+4), width : cols * (nodeSize+2), margin : "auto", marginTop : 20}}>
                             <Grid>
                                 
@@ -186,7 +187,7 @@ const Astar = () => {
                         </Segment>
                     </Grid.Column>
                 </Grid>      
-            </div>
+            {/* </div> */}
         </PathfindingContext.Provider>
     )
 }

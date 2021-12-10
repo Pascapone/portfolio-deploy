@@ -25,7 +25,7 @@ const Home = (props) => {
     }, [])    
 
     return(
-        <div style={{ position : 'absolute', left : '60%', right : '5%', top : 120, bottom : '0%', textAlign : 'justify'}}>              
+        <div style={{ position : 'absolute', left : '60%', right : '5%', top : 120, bottom : '0%', textAlign : 'justify', pointerEvents : 'none'}}>              
                
             {showText && !props.showTextWithoutTyping ? 
             <div>
@@ -65,7 +65,7 @@ const Home = (props) => {
                     pointing: 'left',
                     content: 'Pascal Schott',
                 }}
-                style={{ marginTop : 20 }}
+                style={{ marginTop : 20, pointerEvents : 'auto' }}
                 onClick={handleGithubClicked}
                 /> 
             </div>
