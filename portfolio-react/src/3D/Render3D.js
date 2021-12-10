@@ -125,9 +125,9 @@ const Render3D = (props) => {
     // Load Smartphone
     loader.load( smartphoneFBX, ( sceneObject ) => {  
       
-      sceneObject.scale.set(1, 1, 1);
-      sceneObject.position.set(5, 8, -4);    
-      sceneObject.rotation.set(Math.PI/2, -Math.PI*1.3, Math.PI/2 * 1.5);  
+      sceneObject.scale.set(0.08, 0.065, 0.065);
+      sceneObject.position.set(5, 10, 0);    
+      sceneObject.rotation.set(Math.PI/2 *0.2, -Math.PI*0.9 , Math.PI/2 * 1.3);  
       
       sceneObject.traverse(  ( child ) => {
 
