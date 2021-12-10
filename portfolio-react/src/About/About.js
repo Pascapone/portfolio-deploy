@@ -22,7 +22,7 @@ const About = () => {
                     {name : 'Solidity', skill : 2},  
                     {name : 'Tensorflow', skill : 3}, 
                     {name : 'PyTorch', skill : 1}, 
-                    {name : 'Unity', skill : 3},];  
+                    {name : 'Unity', skill : 4},];  
   
 
     const mounted = useRef();
