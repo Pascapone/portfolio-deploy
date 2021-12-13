@@ -29,15 +29,14 @@ const About = () => {
     useEffect(() => {
         if (!mounted.current) {
             playSkillsAnimation();
-            console.log('About Did Mount!')
+         
             mounted.current = true;            
         } 
         else {
             console.log('About Did Update!')
         }
 
-        return () => {    
-            console.log('About Did Unmount!')   
+        return () => {      
             killAllTweens();            
         }
     }, []);

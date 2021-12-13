@@ -162,11 +162,11 @@ const Astar = () => {
             selectedNodeType, setSelectedNodeType, handleFindPathClick, showFCost, setShowFCost, result, setResult,
             pathfindingRunning, setPathfindingRunning, handlePopulateGridClick}}>
             {/* <div style={{paddingBottom : 40, minWidth : 40, backgroundColor : 'violet'}}> */}
-                <Grid style={{pointerEvents : 'none'}}>
+                <Grid style={{pointerEvents : 'none', width : window.innerWidth}}>
                     <Grid.Column width={2} style={{zIndex: 1, pointerEvents : 'auto'}}>
-                        <div style={{position : 'absolute', zIndex: 1}}>
-                    <AstarSidebar/> 
-                </div>
+                        <div style={{position : 'absolute', zIndex: 1, left : 20}}>
+                            <AstarSidebar/> 
+                        </div>
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <h1>A* Pathfinding</h1>

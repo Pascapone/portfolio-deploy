@@ -251,10 +251,7 @@ class AnimationHandler{
 
   playAnimation(name, fadeDuration=0, loop=true){   
     var nextAnimation = this.fbxAnimations[name];    
-        
-    console.log(name)
-    console.log(nextAnimation)
-    console.log(this.fbxAnimations)
+       
     if(loop){
       nextAnimation.animationAction.setLoop(THREE.LoopRepeat);
     }
@@ -456,11 +453,10 @@ export class FBXModel{
         this.loadAnimations(animationLoaders)
 
         this.scene.add( sceneObject );
-        console.log('KYLE SCENE OBJECT !!!!!!!!!!', sceneObject.children[1].skeleton.bones[25].children[5])
         sceneObject.children[1]['ParentFBX'] = this;
         sceneObject.smartphone = sceneObject.children[1].skeleton.bones[25].children[5];
         sceneObject.smartphone.visible = false;
-        console.log(sceneObject);
+  
         this.sceneObject = sceneObject;
         
       });

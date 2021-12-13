@@ -1,6 +1,17 @@
 import React, { Component, useContext, useEffect, useState, useRef } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM, { render } from "react-dom";
 import * as THREE from "three";
+
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
+import { SphericalMorphShader } from './SphericalMorphShader.js';
+
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -20,14 +31,23 @@ import kyleModel from '../FBX/Kyle.fbx'
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
+import gsap from "gsap";
+import { CustomEase } from "gsap/CustomEase";
+
+
+const cameraWheelEase = CustomEase.create("custom", "M0,0 C0.12,0 0.148,0.6 0.348,0.6 0.498,0.6 0.562,0.342 0.6,0 0.6,0 0.616,-0.116 0.698,-0.116 0.778,-0.116 0.828,0.1 0.9,0.1 0.968,0.1 0.98,0 1,0 ");
+const vignetteWheelEase = CustomEase.create("custom", "M0,0 C0.118,0.016 0.148,0.6 0.348,0.6 0.498,0.6 0.562,0.342 0.6,0 0.6,0 0.628,0 0.71,0 0.79,0 0.816,0 0.888,0 0.956,0 0.98,0 1,0 ");
+
+
+
 const Render3D = (props) => {
   const mount = useRef(null)
 
    
   
   const {handleOnFinishedLoading3D, handleNavbarPulled, render3DLoaded, setRender3DLoaded, handleKyleTexting } = useContext(Context3D);
-  const canvasMarginRight = 37;
-  const canvasMarginBottom = 60;
+  const canvasMarginRight = 10;
+  const canvasMarginBottom = 36;
 
   const mouse = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
@@ -37,7 +57,12 @@ const Render3D = (props) => {
 
   let frameId;
   let renderer;
-  let scene;
+  let composerScene;
+  let effectVignette;
+  let effectSphericalMorph;
+  let FXAA;
+
+  let scene;   
   let camera;
   let keyIsPressed;
   let clock;
@@ -45,12 +70,13 @@ const Render3D = (props) => {
   let sceneInitiated;
   let pascalSchottText;
   let modelsLoaded;
-
+  let cameraTweenRunning = false;
   const fieldOfView = 75;
 
-  const sceneWidth = window.innerWidth - canvasMarginRight
-  const sceneHeight = window.innerHeight - canvasMarginBottom
-  const sceneRatio = sceneWidth/sceneHeight    
+  let sceneWidth = window.innerWidth - canvasMarginRight;
+  let sceneHeight = window.innerHeight - canvasMarginBottom;
+  let sceneRatio = sceneWidth/sceneHeight;
+  
 
   sceneInitiated = false;
 
@@ -77,6 +103,30 @@ const Render3D = (props) => {
       mouseOverCanvas = false;
     }
 
+    const onCompleteCameraEase = () => {
+      cameraTweenRunning = false;
+    }
+
+    const onMouseWheel = () => {
+      if(!cameraTweenRunning){
+
+        cameraTweenRunning = true;
+        const duration = 2;
+
+        gsap.to(camera.position, {duration : duration, ease : cameraWheelEase, z : 8,
+          onComplete : onCompleteCameraEase})
+
+        gsap.to(effectVignette.uniforms[ "darkness" ], {duration : duration, ease : vignetteWheelEase, value : 1.1,
+          })
+
+        gsap.to(effectVignette.uniforms[ "offset" ], {duration : duration, ease : vignetteWheelEase, value : 0.95,
+        })
+
+        gsap.to(effectSphericalMorph.uniforms[ "blend" ], {duration : duration, ease : cameraWheelEase, value : 1,
+          })          
+      }
+    }
+
     // Document Events & Canvas Events
 
     window.addEventListener( 'resize', onWindowResize, false );
@@ -89,14 +139,59 @@ const Render3D = (props) => {
     canvas.addEventListener('mouseleave', onMouseLeaveCanvas);
     window.addEventListener( 'mousemove', onMouseMove, false );
 
+    canvas.addEventListener('wheel', onMouseWheel);
+
     // Scene Setup
     scene = new THREE.Scene();       
     
     camera = new THREE.PerspectiveCamera( fieldOfView, sceneRatio, 0.1, 1000 );
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ alpha: false, antialias: false });
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize( sceneWidth, sceneHeight);
+
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    scene.background = new THREE.Color( 0xffffff );
+    
+    
+    //Post Processing
+
+    const rtParameters = {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBFormat,
+      stencilBuffer: true
+    };
+
+    composerScene = new EffectComposer( renderer, new THREE.WebGLRenderTarget( sceneWidth, sceneHeight, rtParameters ) );
+    composerScene.setPixelRatio(window.devicePixelRatio);
+    composerScene.setSize(sceneWidth, sceneHeight);
+    
+    composerScene.addPass(new RenderPass(scene, camera)); 
+
+    const shaderVignette = VignetteShader;
+    effectVignette = new ShaderPass( shaderVignette );
+
+    effectVignette.uniforms[ "offset" ].value = 0;
+		effectVignette.uniforms[ "darkness" ].value = 0;
+ 
+    composerScene.addPass(effectVignette);
+
+
+    effectSphericalMorph = new ShaderPass(SphericalMorphShader);
+    effectSphericalMorph.material['uniforms']['resolutionW'].value = sceneWidth;
+    effectSphericalMorph.material['uniforms']['resolutionH'].value = sceneHeight;
+    effectSphericalMorph.material['uniforms']['blend'].value = 0;
+    effectSphericalMorph.material['uniforms']['blur'].value = 1.5;
+    composerScene.addPass(effectSphericalMorph);
+ 
+    FXAA = new ShaderPass(FXAAShader);
+    FXAA.material['uniforms']['resolution'].value.x = 1 / (sceneWidth);
+    FXAA.material['uniforms']['resolution'].value.y = 1 / (sceneHeight);
+    FXAA.renderToScreen = false;
+    composerScene.addPass(FXAA)
+
     camera.position.z = 5;
 
     mount.current.appendChild( renderer.domElement );
@@ -188,10 +283,23 @@ const Render3D = (props) => {
 
 function onWindowResize(){
 
-  camera.aspect = (window.innerWidth-canvasMarginRight) / (window.innerHeight-canvasMarginBottom);
-  camera.updateProjectionMatrix();
+  sceneWidth = window.innerWidth-canvasMarginRight;
+  sceneHeight = window.innerHeight-canvasMarginBottom;
 
-  renderer.setSize( window.innerWidth-canvasMarginRight, (window.innerHeight-canvasMarginBottom) );
+  sceneRatio = sceneWidth/sceneHeight;
+
+  console.log(sceneRatio);
+  renderer.setSize( sceneWidth, sceneHeight);
+  composerScene.setSize(sceneWidth, sceneHeight);
+
+  camera.aspect = sceneRatio;
+  camera.updateProjectionMatrix();
+  
+  effectSphericalMorph.material['uniforms']['resolutionW'].value = sceneWidth;
+  effectSphericalMorph.material['uniforms']['resolutionH'].value = sceneHeight;
+
+  FXAA.material['uniforms']['resolution'].value.x = 1 / (sceneWidth);
+  FXAA.material['uniforms']['resolution'].value.y = 1 / (sceneHeight);
 
 }
 
@@ -204,8 +312,9 @@ const stop = () => {
   cancelAnimationFrame(frameId)
 }
 
-const renderScene = () => {
-  renderer.render(scene, camera)
+const renderScene = (deltaTime) => {
+  // renderer.render(scene, camera)
+  composerScene.render(deltaTime);
 }
 
 const handleKeyPressed = (elapsedTime, deltaTime) => {
@@ -350,7 +459,7 @@ const update =  () => {
     }   
   }   
 
-  renderScene()
+  renderScene(deltaTime)
 
   frameId = window.requestAnimationFrame(update)    
 };   

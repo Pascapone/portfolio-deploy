@@ -106,10 +106,10 @@ const KNearest = () => {
     return(        
         <ClusterinContext.Provider value={{handlePopulateGraphClick, setNClusters, setNSamples, setStd, 
             handleFindClustersClicked, setAnimationTime, clusteringRunning, setClusteringRunning}}>
-            <div style={{paddingBottom : 40, minWidth : 1050, pointerEvents : 'none'}}>  
+            <div style={{paddingBottom : 40, width : window.innerWidth - 30, pointerEvents : 'none'}}>  
                 <Grid>
-                    <Grid.Column width={2} style={{zIndex: 1}}>
-                        <div style={{pointerEvents : 'auto'}}>
+                    <Grid.Column width={2}>
+                        <div style={{pointerEvents : 'auto', zIndex: 1, position : 'absolute', left : 20}}>
                             <KNearestSidebar/>
                         </div>
                     </Grid.Column>

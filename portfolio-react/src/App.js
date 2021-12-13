@@ -37,6 +37,8 @@ function App() {
   
   const navbar = useRef();
 
+  const scrollContainer = useRef();
+
   const handleResize = () => {
     setWindowSize({ "height" : window.innerHeight, "width" : window.innerWidth });
   };
@@ -55,12 +57,16 @@ function App() {
 
   const handleFinishedTyping = () => {
     setshowTextWithoutTyping(true);
-  }
+  }  
 
   useEffect(() => {      
-      // handleNavbarPulled()
-      window.addEventListener("resize", handleResize, false);     
-      }, []);  
+    window.addEventListener("resize", handleResize, false);    
+
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    }
+  }, []);  
 
   return (
     <div className="App">  
@@ -73,8 +79,10 @@ function App() {
             <div ref={navbar} style={{position : 'absolute', top : -60, zIndex : 10, width : windowSize.width}}>          
               <Navbar/>
             </div>              
-            <div style={{overflowY: "scroll", marginLeft : '0%', marginRight : '0%', height : windowSize.height - 105, marginTop : 60 }} >
-              <div style={{visibility : render3DVisibility}}>
+            <div style={{overflowY: "scroll", marginLeft : '0%', marginRight : '0%', 
+                height : windowSize.height - 105, marginTop : 60 }} 
+              >
+              <div id='render-div' style={{visibility : render3DVisibility}}>
                 <Render3D/>  
               </div>
               {!render3DLoaded ? 
