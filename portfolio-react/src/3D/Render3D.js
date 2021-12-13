@@ -1,86 +1,60 @@
-import React, { Component, useContext, useEffect, useState, useRef } from "react";
-import ReactDOM, { render } from "react-dom";
+import React, { useContext, useEffect, useRef } from "react";
+
 import * as THREE from "three";
-
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
-import { SphericalMorphShader } from './SphericalMorphShader.js';
-
-import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { Quaternion, Vector3 } from "three";
 
-import colonnaMT from '../Fonts/Colonna MT_Regular.json';
-import robotFont from '../Fonts/Roboto Black_Italic.json';
+import { SphericalMorphShader } from './SphericalMorphShader.js';
+
 import readexFont from '../Fonts/Readex Pro_Bold.json';
 
-
-import { AnimationLoader, FBXModel, RotateToTween, TranslateToTween, customEventTracker, AnimationSequenceHandler } from './AnimationSystem';
+import { FBXModel, RotateToTween, TranslateToTween, customEventTracker, AnimationSequenceHandler } from './AnimationSystem';
 import { FBXAnimationNames, kyleAnimationLoaders, createIntroSequence, kyleAnimations, wavingSequence } from './Animations';
-import { Quaternion, Vector3 } from "three";
 
 import { Context3D } from "../Context";
 
 import kyleModel from '../FBX/Kyle.fbx'
 
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 
-
 const cameraWheelEase = CustomEase.create("custom", "M0,0 C0.12,0 0.148,0.6 0.348,0.6 0.498,0.6 0.562,0.342 0.6,0 0.6,0 0.616,-0.116 0.698,-0.116 0.778,-0.116 0.828,0.1 0.9,0.1 0.968,0.1 0.98,0 1,0 ");
 const vignetteWheelEase = CustomEase.create("custom", "M0,0 C0.118,0.016 0.148,0.6 0.348,0.6 0.498,0.6 0.562,0.342 0.6,0 0.6,0 0.628,0 0.71,0 0.79,0 0.816,0 0.888,0 0.956,0 0.98,0 1,0 ");
 
-
-
 const Render3D = (props) => {
-  const mount = useRef(null)
 
-   
+  const mount = useRef(null)   
   
-  const {handleOnFinishedLoading3D, handleNavbarPulled, render3DLoaded, setRender3DLoaded, handleKyleTexting } = useContext(Context3D);
+  const {handleOnFinishedLoading3D, handleNavbarPulled, setRender3DLoaded, handleKyleTexting } = useContext(Context3D);
   const canvasMarginRight = 10;
   const canvasMarginBottom = 36;
 
   const mouse = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
-  let mouseOverObject = null;
 
-  let mouseOverCanvas = false;
 
-  let frameId;
-  let renderer;
-  let composerScene;
-  let effectVignette;
-  let effectSphericalMorph;
-  let FXAA;
+  const world = {};
 
-  let scene;   
-  let camera;
-  let keyIsPressed;
-  let clock;
-  let kyleRobot;
-  let sceneInitiated;
-  let pascalSchottText;
-  let modelsLoaded;
-  let cameraTweenRunning = false;
+  world.mouseOverObject = null;
+  world.mouseOverCanvas = false; 
+  
   const fieldOfView = 75;
 
-  let sceneWidth = window.innerWidth - canvasMarginRight;
-  let sceneHeight = window.innerHeight - canvasMarginBottom;
-  let sceneRatio = sceneWidth/sceneHeight;
-  
+  world.sceneWidth = window.innerWidth - canvasMarginRight;
+  world.sceneHeight = window.innerHeight - canvasMarginBottom;
+  world.sceneRatio = world.sceneWidth/world.sceneHeight;  
 
-  sceneInitiated = false;
+  world.sceneInitiated = false;
 
-  keyIsPressed = {
+  world.keyIsPressed = {
     Numpad1 : false,
     Numpad2 : false,
     Numpad3 : false,
@@ -93,44 +67,11 @@ const Render3D = (props) => {
     ArrowDown : false,
   }
 
-  useEffect(() => {
-
-    const onMouseEnterCanvas = () => {
-      mouseOverCanvas = true;
-    }
-  
-    const onMouseLeaveCanvas = () => {
-      mouseOverCanvas = false;
-    }
-
-    const onCompleteCameraEase = () => {
-      cameraTweenRunning = false;
-    }
-
-    const onMouseWheel = () => {
-      if(!cameraTweenRunning){
-
-        cameraTweenRunning = true;
-        const duration = 2;
-
-        gsap.to(camera.position, {duration : duration, ease : cameraWheelEase, z : 8,
-          onComplete : onCompleteCameraEase})
-
-        gsap.to(effectVignette.uniforms[ "darkness" ], {duration : duration, ease : vignetteWheelEase, value : 1.1,
-          })
-
-        gsap.to(effectVignette.uniforms[ "offset" ], {duration : duration, ease : vignetteWheelEase, value : 0.95,
-        })
-
-        gsap.to(effectSphericalMorph.uniforms[ "blend" ], {duration : duration, ease : cameraWheelEase, value : 1,
-          })          
-      }
-    }
+  useEffect(() => {    
 
     // Document Events & Canvas Events
 
     window.addEventListener( 'resize', onWindowResize, false );
-
     document.addEventListener('keydown', handleKeyDown, false); 
     document.addEventListener('keyup', handleKeyUp, false);  
 
@@ -141,18 +82,22 @@ const Render3D = (props) => {
 
     canvas.addEventListener('wheel', onMouseWheel);
 
+
     // Scene Setup
-    scene = new THREE.Scene();       
+
+    world.scene = new THREE.Scene();     
+    world.scene.background = new THREE.Color( 0xffffff );  
     
-    camera = new THREE.PerspectiveCamera( fieldOfView, sceneRatio, 0.1, 1000 );
-    renderer = new THREE.WebGLRenderer({ alpha: false, antialias: false });
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setSize( sceneWidth, sceneHeight);
+    world.camera = new THREE.PerspectiveCamera( fieldOfView, world.sceneRatio, 0.1, 1000 );
+    world.camera.position.z = 5;
 
-    renderer.setPixelRatio(window.devicePixelRatio);
+    world.renderer = new THREE.WebGLRenderer({ alpha: false, antialias: false });
+    world.renderer.shadowMap.enabled = true;
+    world.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    world.renderer.setSize( world.sceneWidth, world.sceneHeight);
+    world.renderer.setPixelRatio(window.devicePixelRatio); 
 
-    scene.background = new THREE.Color( 0xffffff );
+    mount.current.appendChild( world.renderer.domElement );
     
     
     //Post Processing
@@ -164,58 +109,57 @@ const Render3D = (props) => {
       stencilBuffer: true
     };
 
-    composerScene = new EffectComposer( renderer, new THREE.WebGLRenderTarget( sceneWidth, sceneHeight, rtParameters ) );
-    composerScene.setPixelRatio(window.devicePixelRatio);
-    composerScene.setSize(sceneWidth, sceneHeight);
+    world.composerScene = new EffectComposer( world.renderer, new THREE.WebGLRenderTarget( world.sceneWidth, world.sceneHeight, rtParameters ) );
+    world.composerScene.setPixelRatio(window.devicePixelRatio);
+    world.composerScene.setSize(world.sceneWidth, world.sceneHeight);
     
-    composerScene.addPass(new RenderPass(scene, camera)); 
+    world.composerScene.addPass(new RenderPass(world.scene, world.camera)); 
 
     const shaderVignette = VignetteShader;
-    effectVignette = new ShaderPass( shaderVignette );
+    world.effectVignette = new ShaderPass( shaderVignette );
+    world.effectVignette.uniforms[ "offset" ].value = 0;
+		world.effectVignette.uniforms[ "darkness" ].value = 0; 
+    world.composerScene.addPass(world.effectVignette);
 
-    effectVignette.uniforms[ "offset" ].value = 0;
-		effectVignette.uniforms[ "darkness" ].value = 0;
+    world.effectSphericalMorph = new ShaderPass(SphericalMorphShader);
+    world.effectSphericalMorph.material['uniforms']['resolutionW'].value = world.sceneWidth;
+    world.effectSphericalMorph.material['uniforms']['resolutionH'].value = world.sceneHeight;
+    world.effectSphericalMorph.material['uniforms']['blend'].value = 0;
+    world.effectSphericalMorph.material['uniforms']['blur'].value = 1.5;
+    world.composerScene.addPass(world.effectSphericalMorph);
  
-    composerScene.addPass(effectVignette);
-
-
-    effectSphericalMorph = new ShaderPass(SphericalMorphShader);
-    effectSphericalMorph.material['uniforms']['resolutionW'].value = sceneWidth;
-    effectSphericalMorph.material['uniforms']['resolutionH'].value = sceneHeight;
-    effectSphericalMorph.material['uniforms']['blend'].value = 0;
-    effectSphericalMorph.material['uniforms']['blur'].value = 1.5;
-    composerScene.addPass(effectSphericalMorph);
- 
-    FXAA = new ShaderPass(FXAAShader);
-    FXAA.material['uniforms']['resolution'].value.x = 1 / (sceneWidth);
-    FXAA.material['uniforms']['resolution'].value.y = 1 / (sceneHeight);
-    FXAA.renderToScreen = false;
-    composerScene.addPass(FXAA)
-
-    camera.position.z = 5;
-
-    mount.current.appendChild( renderer.domElement );
-    
-    // Load FBX Model
+    world.FXAA = new ShaderPass(FXAAShader);
+    world.FXAA.material['uniforms']['resolution'].value.x = 1 / (world.sceneWidth);
+    world.FXAA.material['uniforms']['resolution'].value.y = 1 / (world.sceneHeight);
+    world.FXAA.renderToScreen = false;
+    world.composerScene.addPass(world.FXAA)   
+      
 
     // Kyle Model  
 
     const loadingManger = new THREE.LoadingManager();
     
     loadingManger.onStart = (url, loaded, total) => {   
+      console.log(url, loaded, total);
+    }
+
+    loadingManger.onProgress = (url, loaded, total) => {
+      console.log(url, loaded, total);
     }
 
     loadingManger.onLoad = () => {      
       console.log('LOADED')
-      modelsLoaded = true;
+      world.modelsLoaded = true;
     }
 
     const loader = new FBXLoader(loadingManger);
 
-    kyleRobot = new FBXModel(kyleModel, scene, new THREE.Vector3(0, -1, -10), new THREE.Vector3(0,0,0),
+    world.kyleRobot = new FBXModel(kyleModel, world.scene, new THREE.Vector3(0, -1, -10), new THREE.Vector3(0,0,0),
     new THREE.Vector3(0.01,0.01,0.01), kyleAnimationLoaders, true, true, kyleAnimations, loader);
           
+
     // Pascal Text
+
     const font = new FontLoader().parse(readexFont);
 
     const textConfig = {
@@ -224,101 +168,105 @@ const Render3D = (props) => {
       height: 0.0001,      
     }
 
-    pascalSchottText = new THREE.Object3D(); 
+    world.pascalSchottText = new THREE.Object3D(); 
     const textColor = '#4e8dc2'
 
     var geometry = new TextGeometry( 'Pascal',  textConfig);  
     var material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
     var pascalText =  new THREE.Mesh( geometry, material );
-    pascalSchottText.add( pascalText );
+    world.pascalSchottText.add( pascalText );
     pascalText.position.x = -2
     pascalText.position.y = 0.8
 
-    var geometry = new TextGeometry( 'Schott',  textConfig);  
-    var material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
+    geometry = new TextGeometry( 'Schott',  textConfig);  
+    material = new THREE.MeshStandardMaterial( { color: textColor, roughness : 0, metalness : 0  } );
     var schottText =  new THREE.Mesh( geometry, material );
-    pascalSchottText.add( schottText );
+    world.pascalSchottText.add( schottText );
     schottText.position.x = -2.1
     schottText.position.y = 0
 
-    scene.add(pascalSchottText);    
-    pascalSchottText.position.z = 2.2;
+    world.scene.add(world.pascalSchottText);    
+    world.pascalSchottText.position.z = 2.2;
 
-    pascalSchottText.position.x = -hScreenEdgeByZPosition(pascalSchottText.position.z) + -1;
+    world.pascalSchottText.position.x = -hScreenEdgeByZPosition(world.pascalSchottText.position.z) + -1;
     
 
     // Plane
-    var geometry = new THREE.PlaneGeometry( 100, 40, 10 );
-    var material = new THREE.MeshStandardMaterial( { color: "#ffffff", roughness : 0, metalness : 0  } );
+
+    geometry = new THREE.PlaneGeometry( 100, 40, 10 );
+    material = new THREE.MeshStandardMaterial( { color: "#ffffff", roughness : 0, metalness : 0  } );
     var plane = new THREE.Mesh( geometry, material );
-    scene.add( plane );
+    world.scene.add( plane );
     plane.rotation.x = -Math.PI / 2;
     plane.position.y = -1;
     plane.receiveShadow = true;
 
+
     // Lighting
+
     var hemisphereLight = new THREE.HemisphereLight("#ffffff" ,"#ffffff", 0.6);
-    scene.add(hemisphereLight);
+    world.scene.add(hemisphereLight);
 
     var directionalLight = new THREE.DirectionalLight("#ffffff", 1);
-    scene.add(directionalLight);
+    world.scene.add(directionalLight);
     directionalLight.position.set(10, 10, 10);
     directionalLight.castShadow =  true;
 
+
     // Clock
-    clock = new THREE.Clock()
+
+    world.clock = new THREE.Clock()
+
 
     // Start Update Loop
-    start()
 
+    start()
     
 
     return () => {
       customEventTracker.cleanUp();
       stop();
-      mount.current.removeChild(renderer.domElement);
+      mount.current.removeChild(world.renderer.domElement);
     } 
   }, [])
 
 
 function onWindowResize(){
 
-  sceneWidth = window.innerWidth-canvasMarginRight;
-  sceneHeight = window.innerHeight-canvasMarginBottom;
+  world.sceneWidth = window.innerWidth-canvasMarginRight;
+  world.sceneHeight = window.innerHeight-canvasMarginBottom;
 
-  sceneRatio = sceneWidth/sceneHeight;
+  world.sceneRatio = world.sceneWidth/world.sceneHeight;
 
-  console.log(sceneRatio);
-  renderer.setSize( sceneWidth, sceneHeight);
-  composerScene.setSize(sceneWidth, sceneHeight);
+  world.renderer.setSize( world.sceneWidth, world.sceneHeight);
+  world.composerScene.setSize(world.sceneWidth, world.sceneHeight);
 
-  camera.aspect = sceneRatio;
-  camera.updateProjectionMatrix();
+  world.camera.aspect = world.sceneRatio;
+  world.camera.updateProjectionMatrix();
   
-  effectSphericalMorph.material['uniforms']['resolutionW'].value = sceneWidth;
-  effectSphericalMorph.material['uniforms']['resolutionH'].value = sceneHeight;
+  world.effectSphericalMorph.material['uniforms']['resolutionW'].value = world.sceneWidth;
+  world.effectSphericalMorph.material['uniforms']['resolutionH'].value = world.sceneHeight;
 
-  FXAA.material['uniforms']['resolution'].value.x = 1 / (sceneWidth);
-  FXAA.material['uniforms']['resolution'].value.y = 1 / (sceneHeight);
+  world.FXAA.material['uniforms']['resolution'].value.x = 1 / (world.sceneWidth);
+  world.FXAA.material['uniforms']['resolution'].value.y = 1 / (world.sceneHeight);
 
 }
 
 const start = () => {
-  if (!frameId) {
-    frameId = requestAnimationFrame(update)
+  if (!world.frameId) {
+    world.frameId = requestAnimationFrame(update)
   }
 }
 const stop = () => {
-  cancelAnimationFrame(frameId)
+  cancelAnimationFrame(world.frameId)
 }
 
 const renderScene = (deltaTime) => {
-  // renderer.render(scene, camera)
-  composerScene.render(deltaTime);
+  world.composerScene.render(deltaTime);
 }
 
 const handleKeyPressed = (elapsedTime, deltaTime) => {
-  for(const [key, value] of Object.entries(keyIsPressed)){
+  for(const [key, value] of Object.entries(world.keyIsPressed)){
     if(value){
       switch (key) {
         case 'Numpad1':
@@ -348,6 +296,38 @@ const handleKeyPressed = (elapsedTime, deltaTime) => {
   }
 }
 
+const onMouseEnterCanvas = () => {
+  world.mouseOverCanvas = true;
+}
+
+const onMouseLeaveCanvas = () => {
+  world.mouseOverCanvas = false;
+}
+
+const onCompleteCameraEase = () => {
+  world.cameraTweenRunning = false;
+}
+
+const onMouseWheel = () => {
+  if(!world.cameraTweenRunning){
+
+    world.cameraTweenRunning = true;
+    const duration = 2;
+
+    gsap.to(world.camera.position, {duration : duration, ease : cameraWheelEase, z : 8,
+      onComplete : onCompleteCameraEase})
+
+    gsap.to(world.effectVignette.uniforms[ "darkness" ], {duration : duration, ease : vignetteWheelEase, value : 1.1,
+      })
+
+    gsap.to(world.effectVignette.uniforms[ "offset" ], {duration : duration, ease : vignetteWheelEase, value : 0.95,
+    })
+
+    gsap.to(world.effectSphericalMorph.uniforms[ "blend" ], {duration : duration, ease : cameraWheelEase, value : 1,
+      })          
+  }
+}
+
 const onMouseEnterObject = (obj) => {
   if(obj && obj.ParentFBX){
     if(obj.ParentFBX.animationSequenceHandler.sequenceFinished){
@@ -357,51 +337,47 @@ const onMouseEnterObject = (obj) => {
 }
 
 const onMouserLeave = (obj) => {
-  // if(obj && obj.ParentFBX){
-  //   if(obj.ParentFBX.animationSequenceHandler.sequenceFinished){
-  //     obj.ParentFBX.animationHandler.playAnimation(FBXAnimationNames.Idle, 1)
-  //   }
-  // }
+ 
 }
 
 const raycastMouse = () => {
 
-  raycaster.setFromCamera( mouse, camera );
+  raycaster.setFromCamera( mouse, world.camera );
 
-  const intersects = raycaster.intersectObjects( scene.children );
+  const intersects = raycaster.intersectObjects( world.scene.children );
     
     if(intersects.length){
       for ( let i = 0; i < intersects.length; i ++ ) {
-        if(mouseOverObject != intersects[ i ].object){
-          if(mouseOverObject){
-            onMouserLeave(mouseOverObject);
+        if(world.mouseOverObject !== intersects[ i ].object){
+          if(world.mouseOverObject){
+            onMouserLeave(world.mouseOverObject);
           }
-          mouseOverObject = intersects[ i ].object  
-          onMouseEnterObject(mouseOverObject)
+          world.mouseOverObject = intersects[ i ].object  
+          onMouseEnterObject(world.mouseOverObject)
         }                       
         break;
   
       }
     }
     else{
-      if(mouseOverObject){
-        onMouserLeave(mouseOverObject);
+      if(world.mouseOverObject){
+        onMouserLeave(world.mouseOverObject);
       }
-      mouseOverObject = null;
+      world.mouseOverObject = null;
     }        
 }
 
 const initScene = () => {
 
-  for(const fbxAnimation of kyleRobot.fbxAnimations){
-    fbxAnimation.animationAction = kyleRobot.animationActions[fbxAnimation.actionAnimationName];
-    kyleRobot.animationHandler.fbxAnimations[fbxAnimation.name] = fbxAnimation;
+  for(const fbxAnimation of world.kyleRobot.fbxAnimations){
+    fbxAnimation.animationAction = world.kyleRobot.animationActions[fbxAnimation.actionAnimationName];
+    world.kyleRobot.animationHandler.fbxAnimations[fbxAnimation.name] = fbxAnimation;
   }
  
-  kyleRobot.animationSequenceHandler = new AnimationSequenceHandler(kyleRobot.animationHandler, 'Idle', 0.5);
+  world.kyleRobot.animationSequenceHandler = new AnimationSequenceHandler(world.kyleRobot.animationHandler, 'Idle', 0.5);
 
-  const introSequence = createIntroSequence(fieldOfView, sceneRatio, camera.position.z);
-  kyleRobot.animationSequenceHandler.loadSequence(introSequence);   
+  const introSequence = createIntroSequence(fieldOfView, world.sceneRatio, world.camera.position.z);
+  world.kyleRobot.animationSequenceHandler.loadSequence(introSequence);   
 
   var moveTextTween = new TranslateToTween(70/60, 'power1.inOut', new Vector3(1, 0, 0), true, true, 
     [new TranslateToTween(4, 'power1.inOut', new Vector3(0, 0, -0.3), true, false),
@@ -414,54 +390,56 @@ const initScene = () => {
 
 
   // Animation Sequence Events
-  kyleRobot.animationSequenceHandler.addListenerToStep('Pull Name', 'start', () => moveTextTween.play(pascalSchottText), false)
-  kyleRobot.animationSequenceHandler.addListenerToStep('Pull Name', 'finished', () => moveTextTween.stop(), false)
 
-  kyleRobot.animationSequenceHandler.addListenerToStep('Navbar Pull', 'start', () => handleNavbarPulled(), false)
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Pull Name', 'start', () => moveTextTween.play(world.pascalSchottText), false)
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Pull Name', 'finished', () => moveTextTween.stop(), false)
 
-  kyleRobot.animationSequenceHandler.addListenerToStep('Turn To Camera', 'finished', () => lookAtPositionTween(
-    kyleRobot.sceneObject, camera.position, 1, 'power1'), false
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Navbar Pull', 'start', () => handleNavbarPulled(), false)
+
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Turn To Camera', 'finished', () => lookAtPositionTween(
+    world.kyleRobot.sceneObject, world.camera.position, 1, 'power1'), false
   )
 
-  kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'start', () => {
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'start', () => {
     handleKyleTexting();
-    kyleRobot.sceneObject.smartphone.visible = true;
+    world.kyleRobot.sceneObject.smartphone.visible = true;
   }, false)
 
-  kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'finished', () => {   
-    kyleRobot.sceneObject.smartphone.visible = false;
+  world.kyleRobot.animationSequenceHandler.addListenerToStep('Kyle Texting', 'finished', () => {   
+    world.kyleRobot.sceneObject.smartphone.visible = false;
   }, false)
   
   
 
-  sceneInitiated = true;
+  world.sceneInitiated = true;
   handleOnFinishedLoading3D();
   setRender3DLoaded(true);
 }
 
 // Update Frame Loop
+
 const update =  () => {  
-  var deltaTime = clock.getDelta();
-  var elapsedTime = clock.getElapsedTime();  
+  var deltaTime = world.clock.getDelta();
+  var elapsedTime = world.clock.getElapsedTime();  
   
   handleKeyPressed(elapsedTime, deltaTime);
     
-  if(kyleRobot && modelsLoaded){        
+  if(world.kyleRobot && world.modelsLoaded){        
 
-    if(!sceneInitiated){         
+    if(!world.sceneInitiated){         
       initScene();
     }
 
-    kyleRobot.update(elapsedTime, deltaTime);
+    world.kyleRobot.update(elapsedTime, deltaTime);
 
-    if(mouseOverCanvas){
+    if(world.mouseOverCanvas){
       raycastMouse();
     }   
   }   
 
   renderScene(deltaTime)
 
-  frameId = window.requestAnimationFrame(update)    
+  world.frameId = window.requestAnimationFrame(update)    
 };   
 
 const handleKeyDown = (e) => {
@@ -469,21 +447,21 @@ const handleKeyDown = (e) => {
     case 'Space':
       break;
     case 'Digit1':
-      kyleRobot.playAnimation(FBXAnimationNames.Idle, 1);
+      world.kyleRobot.playAnimation(FBXAnimationNames.Idle, 1);
       break;
     case 'Digit2':
-      kyleRobot.playAnimation(FBXAnimationNames.Running, 1);
+      world.kyleRobot.playAnimation(FBXAnimationNames.Running, 1);
         break;
     case 'Digit3':
-      kyleRobot.playAnimation(FBXAnimationNames.JumpToFreehangRootMotion, 0.2, false);
+      world.kyleRobot.playAnimation(FBXAnimationNames.JumpToFreehangRootMotion, 0.2, false);
       break;
     case 'Digit4':             
       break;
     case 'Digit5':     
       break;
     default:
-      if(e.code in keyIsPressed){
-        keyIsPressed[e.code] = true;
+      if(e.code in world.keyIsPressed){
+        world.keyIsPressed[e.code] = true;
       }       
       break;
   }      
@@ -494,16 +472,16 @@ const handleKeyUp = (e) => {
     case 'Space':
       break;       
     default:
-      if(e.code in keyIsPressed){
-        keyIsPressed[e.code] = false;
+      if(e.code in world.keyIsPressed){
+        world.keyIsPressed[e.code] = false;
       }        
       break;
   }      
 }
 
 const hScreenEdgeByZPosition = (z) => {
-  var hFOV = 2 * Math.atan(Math.tan(fieldOfView/2 * Math.PI/180) * sceneRatio)          
-  var x = Math.tan(hFOV/2) * (z-camera.position.z);
+  var hFOV = 2 * Math.atan(Math.tan(fieldOfView/2 * Math.PI/180) * world.sceneRatio)          
+  var x = Math.tan(hFOV/2) * (z-world.camera.position.z);
   return Math.abs(x);
 }
 

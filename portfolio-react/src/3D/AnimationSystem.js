@@ -1,6 +1,5 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from "three";
 import { Vector3 } from "three";
 
@@ -393,7 +392,7 @@ export class FBXModel{
       const animationAction = this.mixer.clipAction(object.animations[0]);  
       this.animationActions[animationName] = animationAction; 
               
-    })
+    }, undefined, function(error){ console.log(error) })
   }
 
   addAnimationLoopListender(objectWithInvokeFunction){
@@ -459,7 +458,7 @@ export class FBXModel{
   
         this.sceneObject = sceneObject;
         
-      });
+      }, undefined, function(error){ console.log(error) });
   }
 
   playAnimation(name, fadeDuration=0, loop){

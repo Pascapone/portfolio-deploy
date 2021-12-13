@@ -7,9 +7,9 @@ import { Button } from "semantic-ui-react";
 const Home = (props) => {  
     const [showText, setShowText] = useState(false);
     
-    const { render3DLoaded, handleFinishedTyping } = useContext(Context3D);
+    const { handleFinishedTyping } = useContext(Context3D);
 
-    if(props.homeKyleTextingTrrigger != showText){
+    if(props.homeKyleTextingTrrigger !== showText){
         setShowText(true); 
     }  
 
@@ -22,7 +22,7 @@ const Home = (props) => {
         return () => {
             handleFinishedTyping();
         }
-    }, [])    
+    }, [handleFinishedTyping])    
 
     return(
         <div style={{ position : 'absolute', left : '60%', right : '5%', top : 120, bottom : '0%', textAlign : 'justify', pointerEvents : 'none'}}>              

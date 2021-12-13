@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Menu } from 'semantic-ui-react'
-import {Slider, Picker, Item, Switch } from '@adobe/react-spectrum'
+import { Slider } from '@adobe/react-spectrum'
 import { ClusterinContext } from '../../Context'
 
 const KNearestSidebar = (props) => { 

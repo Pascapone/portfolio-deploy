@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Dropdown, Menu } from 'semantic-ui-react'
 import { useNavigate } from 'react-router';
 
@@ -8,7 +8,7 @@ import { StatusbarContext } from "../Context";
 const StatusTypes = require('../configs/status.json')
 
 const Navbar = () => {
-  const { globalStatus, setGlobalStatus } = useContext(StatusbarContext)
+  const { setGlobalStatus } = useContext(StatusbarContext)
   let navigate = useNavigate(); 
 
   const handleNavigate = (routerLink) => {
@@ -19,7 +19,7 @@ const Navbar = () => {
   return (      
     <Menu>
       <Menu.Item pointing onClick={() => handleNavigate('/')}>
-        <img src='./images/Logo.png' />
+        <img src='./images/Logo.png' alt='missing' />
       </Menu.Item>      
       <Menu.Item
         name='home'

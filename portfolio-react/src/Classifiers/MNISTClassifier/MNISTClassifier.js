@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from "react";
 import CanvasDraw from "react-canvas-draw";
-import { Grid, Image, Button, Segment } from "semantic-ui-react";
+import { Grid, Button, Segment } from "semantic-ui-react";
 import { StatusbarContext } from "../../Context";
 
 const StatusTypes = require('../../configs/status.json');
@@ -9,7 +9,7 @@ const StatusTypes = require('../../configs/status.json');
 const MNISTClassifier = () => {
     const canvasRef = useRef();
 
-    const { globalStatus, setGlobalStatus } = useContext(StatusbarContext);
+    const { setGlobalStatus } = useContext(StatusbarContext);
 
     const [result, setResult] = useState("None"); 
     

@@ -5,7 +5,7 @@ import { StatusbarContext } from "../../Context";
 const StatusTypes = require('../../configs/status.json');
 
 const ImageClassifier = () => {  
-    const { globalStatus, setGlobalStatus } = useContext(StatusbarContext);
+    const { setGlobalStatus } = useContext(StatusbarContext);
     
     const [result, setResult] = useState("Lion");
     const [imageURL, setImageURL] = useState("https://upload.wikimedia.org/wikipedia/commons/1/1e/Cecil_the_lion_at_Hwange_National_Park_%284516560206%29.jpg");

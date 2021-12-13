@@ -20,7 +20,7 @@ const colors = [
 ]
 
 const KNearest = () => {
-    const {globalStatus, setGlobalStatus} = useContext(StatusbarContext)
+    const { setGlobalStatus } = useContext(StatusbarContext)
 
     const [nClusters, setNClusters] = useState(2)
     const [nSamples, setNSamples] = useState(50)
@@ -51,7 +51,7 @@ const KNearest = () => {
             body : JSON.stringify({"centers" : nClusters, "n_samples" : nSamples, 'cluster_std' : std})
         })
 
-        if (respone.status == 200){
+        if (respone.status === 200){
             const text = await respone.text()
             const points = JSON.parse(text)
             if (classifiers.length > 0){
@@ -68,7 +68,7 @@ const KNearest = () => {
     const handleFindClustersClicked = async () => {
         setGlobalStatus({ 'status' : status.Loading,  'statusText' : 'Classifying clusters' })    
 
-        if(points.length == 0){
+        if(points.length === 0){
             setGlobalStatus({ 'status' : status.Failed,  'statusText' : 'No points to classify' });
             await timeout(0)
             setClusteringRunning(false);
@@ -80,7 +80,7 @@ const KNearest = () => {
             body : JSON.stringify({points, nClusters})
         })
 
-        if (response.status == 200){
+        if (response.status === 200){
             const text = await response.text()
             const result = JSON.parse(text)
             

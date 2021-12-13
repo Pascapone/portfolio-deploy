@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import AstarSidebar from './AstarSidebar';
 import { Grid, Segment } from 'semantic-ui-react'
 import RenderGrid from '../RenderGrid';
@@ -7,14 +7,12 @@ import { PathfindingContext, StatusbarContext } from '../../Context';
 const pathfindingConfig = require('../../configs/pathfinding.json');
 
 const NodeType = pathfindingConfig['nodeTypes']
-const NodeColors = pathfindingConfig['nodeColors']
 
 const StatusTypes = require('../../configs/status.json')
 
 const Astar = () => {    
-    const { globalStatus, setGlobalStatus } = useContext(StatusbarContext)   
-
-    const [nodeSize, setNodeSize] = useState(50);
+    const { setGlobalStatus } = useContext(StatusbarContext) 
+    
     const [rerender, setRerender] = useState(true)
     const [selectedNodeType, setSelectedNodeType] = useState('obstacle')
     const [clearGrid, setClearGrid] = useState(false)
@@ -25,6 +23,7 @@ const Astar = () => {
 
     const rows = 8;
     const cols = 16;
+    const nodeSize = 50;
 
     if(clearGrid){
         setGlobalStatus({ 'status' : StatusTypes.Ready, 'statusText' : 'Grid cleared' })
@@ -42,7 +41,7 @@ const Astar = () => {
             body : JSON.stringify({numObstacles, stickPercentage, rows, cols})
         })
 
-        if (response.status == 200){
+        if (response.status === 200){
             const text = await response.text(); 
             const createdGrid  = JSON.parse(text)['grid']
             
@@ -66,7 +65,7 @@ const Astar = () => {
             let grid = pathfindingGrid
             grid.forEach(row => {
                 row.forEach(element => {                 
-                    if(element.nodeType == NodeType.Path || element.nodeType == NodeType.Explored || element.nodeType == NodeType.Open){
+                    if(element.nodeType === NodeType.Path || element.nodeType === NodeType.Explored || element.nodeType === NodeType.Open){
                         element.nodeType = NodeType.Unblocked
                     }
                 })                
@@ -101,17 +100,17 @@ const Astar = () => {
         let gridHistory = result['gridHistory']
         let currentRerender = rerender
 
-        if(status == "success" || status == "blocked"){
+        if(status === "success" || status === "blocked"){
             setGlobalStatus({ 'status' : StatusTypes.Loading, 'statusText' : 'Playing animation' }) 
             for(const step of gridHistory){
                 for(const row of step){
                     for(const node of row){
                         const nodeType = grid[node.row][node.col].nodeType
-                        if(nodeType != NodeType['Finish'] && nodeType != NodeType['Start']){
+                        if(nodeType !== NodeType['Finish'] && nodeType !== NodeType['Start']){
                             grid[node.row][node.col].nodeType = node.nodeType
                         }  
 
-                        if(node.nodeType == NodeType['Explored'] || node.nodeType == NodeType['Open']){
+                        if(node.nodeType === NodeType['Explored'] || node.nodeType === NodeType['Open']){
                             grid[node.row][node.col].fCost = node.fCost;
                         }            
                         else{
@@ -125,9 +124,9 @@ const Astar = () => {
                 await timeout(animationTime);            
             }   
             
-            if(status == 'success'){
+            if(status === 'success'){
                 for(const element of resultPath){
-                    if(grid[element.row][element.col].nodeType != NodeType['Finish']){
+                    if(grid[element.row][element.col].nodeType !== NodeType['Finish']){
                         grid[element.row][element.col].nodeType = NodeType['Path']
     
                         setPathfindingGrid(grid)

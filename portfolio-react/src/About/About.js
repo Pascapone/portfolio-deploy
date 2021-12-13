@@ -9,24 +9,44 @@ const About = () => {
     const opacities = [];
     const tweens = [];    
 
-    const skills = [{name : 'Abaqus', skill : 3},
-                    {name : 'Ansys', skill : 1},
-                    {name : 'C#', skill : 3},
-                    {name : 'C++', skill : 2},
-                    {name : 'CreoParametrics', skill : 3},
-                    {name : 'Javascript', skill : 3},
-                    {name : 'LabView', skill : 3},
-                    {name : 'Matlab', skill : 3},
-                    {name : 'Python', skill : 4},  
-                    {name : 'React', skill : 2},
-                    {name : 'Solidity', skill : 2},  
-                    {name : 'Tensorflow', skill : 3}, 
-                    {name : 'PyTorch', skill : 1}, 
-                    {name : 'Unity', skill : 4},];  
-  
+    const skills = [
+        {name : 'Abaqus', skill : 3},
+        {name : 'C#', skill : 3},
+        {name : 'C++', skill : 2},
+        {name : 'CreoParametrics', skill : 3},
+        {name : 'Javascript', skill : 3},
+        {name : 'LabView', skill : 3},
+        {name : 'Matlab', skill : 3},
+        {name : 'Python', skill : 4},  
+        {name : 'React', skill : 2},
+        {name : 'Solidity', skill : 2},  
+        {name : 'Tensorflow', skill : 3},
+        {name : 'Unity', skill : 4},
+    ];  
+    
+    const playSkillsAnimation = () => {        
+        var delay = 0;
+        const delayStep = 0.1;
+        skillsRef.current.forEach( (el, i) => {      
+            gsap.to(el, {duration : 1, ease : 'none', opacity : opacities[i], 
+                delay : delay, onComplete : onSkillVisible});
+            delay += delayStep;
+        })
+        
+    }
+
+    const killAllTweens = () => {
+        for(const tween of tweens){
+            tween.kill()
+        }
+
+        tweens.length = 0;
+    }      
 
     const mounted = useRef();
-    useEffect(() => {
+
+    useEffect(() => {              
+
         if (!mounted.current) {
             playSkillsAnimation();
          
@@ -39,26 +59,9 @@ const About = () => {
         return () => {      
             killAllTweens();            
         }
-    }, []);
+    });
  
-    const killAllTweens = () => {
-        for(const tween of tweens){
-            tween.kill()
-        }
-
-        tweens.length = 0;
-    }
-
-    const playSkillsAnimation = () => {        
-        var delay = 0;
-        const delayStep = 0.1;
-        skillsRef.current.forEach( (el, i) => {      
-            gsap.to(el, {duration : 1, ease : 'none', opacity : opacities[i], 
-                delay : delay, onComplete : onSkillVisible});
-            delay += delayStep;
-        })
-        
-    }
+    
     
     function onSkillVisible() {
         if(this.vars.opacity === 1){

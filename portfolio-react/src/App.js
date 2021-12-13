@@ -1,7 +1,7 @@
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import AppRoutes from './AppRoutes';
 import Navbar from './Shared/Navbar';
@@ -32,12 +32,9 @@ function App() {
   const [render3DVisibility, setRender3DVisibility] = useState('hidden');
 
   const [homeKyleTextingTrrigger, setHomeKyleTextingTrrigger] = useState(false)
-  const [showTextWithoutTyping, setshowTextWithoutTyping] = useState(false)
-                      
+  const [showTextWithoutTyping, setshowTextWithoutTyping] = useState(false)                      
   
   const navbar = useRef();
-
-  const scrollContainer = useRef();
 
   const handleResize = () => {
     setWindowSize({ "height" : window.innerHeight, "width" : window.innerWidth });

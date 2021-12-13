@@ -8,8 +8,8 @@ const AstarSidebar = (props) => {
   const [animationTime, setAnimationTime] = useState(500)
   const [stickPercentage, setStickPercentage] = useState(0.5)
 
-  const {selectedNodeType, setSelectedNodeType, clearGrid, setClearGrid, handleFindPathClick,
-    showFCost, setShowFCost, pathfindingRunning, setPathfindingRunning, handlePopulateGridClick} = useContext(PathfindingContext)
+  const { setSelectedNodeType, setClearGrid, handleFindPathClick,
+    setShowFCost, pathfindingRunning, setPathfindingRunning, handlePopulateGridClick } = useContext(PathfindingContext)
 
   const handleItemClick = (e, { name }) => {
     switch (name) {
