@@ -75,7 +75,7 @@ const MNISTClassifier = () => {
                             <h4>Prediction: {result}</h4>
                         </Grid.Row> 
                     </Grid>    
-                    </Segment>     
+                </Segment>     
             </div> 
         </div>
     );

@@ -20,9 +20,12 @@ const Home = (props) => {
     useEffect(() => {    
 
         return () => {
+            console.log("Unmount")
             handleFinishedTyping();
         }
-    }, [handleFinishedTyping])    
+    }, [])    
+
+    console.log("Show Text without loading:", props.showTextWithoutTyping)
 
     return(
         <div style={{ position : 'absolute', left : '60%', right : '5%', top : 120, bottom : '0%', textAlign : 'justify', pointerEvents : 'none'}}>              
